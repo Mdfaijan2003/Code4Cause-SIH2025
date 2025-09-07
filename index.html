@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CivicFix</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined');
+    @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css');
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+  </style>
+  <link rel="stylesheet" href="output.css" />
+</head>
+
+<body>
+  <div id="main-container" class="bg-gray-100">
+    <div class="font-sans bg-slate-50 min-h-screen">
+      <header class="bg-[#611BF8] text-white shadow-lg">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+          <div class="flex items-center space-x-2">
+            <span class="material-symbols-outlined text-3xl">location_city</span>
+            <h1 class="text-2xl font-bold">CivicFix</h1>
+          </div>
+          <div class="flex items-center space-x-4">
+            <button class="bg-indigo-500 bg-opacity-20 hover:bg-opacity-30 transition-all rounded-full p-2">
+              <span class="material-symbols-outlined">notifications</span>
+            </button>
+            <div
+              class="flex items-center space-x-2 cursor-pointer hover:bg-white hover:bg-opacity-10 transition-all px-3 py-1 rounded-full">
+              <div class="w-8 h-8 bg-[#611BF8] rounded-full flex items-center justify-center">
+                <span class="material-symbols-outlined">person</span>
+              </div>
+              <span class="hidden md:block">Code4cause</span>
+            </div>
+          </div>
+        </div>
+      </header>
+      <main class="container mx-auto px-4 py-8">
+        <section class="mb-12 relative rounded-xl overflow-hidden shadow-lg">
+          <div class="absolute inset-0 bg-gradient-to-r from-[#4607d0]/80 to-[#631bff]/60 z-10"></div>
+          <img src="https://images.unsplash.com/photo-1444723121867-7a241cacace9" alt="City view"
+            class="w-full h-80 object-cover" />
+          <div class="absolute inset-0 z-20 flex flex-col justify-center px-8 text-white">
+            <h2 class="text-4xl font-bold mb-4">Make Your City Better</h2>
+            <p class="text-xl mb-6 max-w-2xl">
+              Report civic issues in your neighborhood and track their resolution in real-time.
+            </p>
+            <button
+              class="bg-white text-[#611BF8] hover:bg-[#611BF8] hover:text-white transition-all w-48 py-3 rounded-full font-semibold flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+              <span class="material-symbols-outlined">add_circle</span> <span>Report an Issue</span>
+            </button>
+          </div>
+        </section>
+        <section class="mb-12">
+          <div class="flex flex-col md:flex-row justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold text-gray-800">Recent Reports</h2>
+            <div class="flex space-x-3 mt-4 md:mt-0">
+              <div class="relative">
+                <details class="group">
+                  <summary
+                    class="flex items-center space-x-2 bg-white border border-gray-300 rounded-lg px-4 py-2 cursor-pointer hover:bg-gray-50 transition-all">
+                    <span class="material-symbols-outlined">filter_alt</span>
+                    <span>Filter</span>
+                    <span
+                      class="material-symbols-outlined text-sm transition-transform group-open:rotate-180">expand_more</span>
+                  </summary>
+                  <div class="absolute mt-2 right-0 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-10">
+                    <div class="p-3">
+                      <div class="mb-2 font-medium">Issue Type</div>
+                      <div class="space-y-2">
+                        <label class="flex items-center space-x-2 cursor-pointer">
+                          <input type="checkbox" class="rounded text-primary-500" />
+                          <span>Potholes</span>
+                        </label>
+                        <label class="flex items-center space-x-2 cursor-pointer">
+                          <input type="checkbox" class="rounded text-primary-500" />
+                          <span>Streetlights</span>
+                        </label>
+                        <label class="flex items-center space-x-2 cursor-pointer">
+                          <input type="checkbox" class="rounded text-primary-500" />
+                          <span>Trash</span>
+                        </label>
+                        <label class="flex items-center space-x-2 cursor-pointer">
+                          <input type="checkbox" class="rounded text-primary-500" />
+                          <span>Graffiti</span>
+                        </label>
+                      </div>
+                      <div class="mt-4 mb-2 font-medium">Status</div>
+                      <div class="space-y-2">
+                        <label class="flex items-center space-x-2 cursor-pointer">
+                          <input type="checkbox" class="rounded text-primary-500" />
+                          <span>Pending</span>
+                        </label>
+                        <label class="flex items-center space-x-2 cursor-pointer">
+                          <input type="checkbox" class="rounded text-primary-500" />
+                          <span>In Progress</span>
+                        </label>
+                        <label class="flex items-center space-x-2 cursor-pointer">
+                          <input type="checkbox" class="rounded text-primary-500" />
+                          <span>Resolved</span>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </details>
+              </div>
+              <div class="relative">
+                <details class="group">
+                  <summary
+                    class="flex items-center space-x-2 bg-white border border-gray-300 rounded-lg px-4 py-2 cursor-pointer hover:bg-gray-50 transition-all">
+                    <span class="material-symbols-outlined">sort</span> <span>Sort</span>
+                    <span
+                      class="material-symbols-outlined text-sm transition-transform group-open:rotate-180">expand_more</span>
+                  </summary>
+                  <div class="absolute mt-2 right-0 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-10">
+                    <div class="py-1">
+                      <button class="w-full text-left px-4 py-2 hover:bg-gray-100 transition-all">
+                        Newest First
+                      </button>
+                      <button class="w-full text-left px-4 py-2 hover:bg-gray-100 transition-all">
+                        Oldest First
+                      </button>
+                      <button class="w-full text-left px-4 py-2 hover:bg-gray-100 transition-all">
+                        Most Upvoted
+                      </button>
+                      <button class="w-full text-left px-4 py-2 hover:bg-gray-100 transition-all">
+                        Priority (High to Low)
+                      </button>
+                    </div>
+                  </div>
+                </details>
+              </div>
+            </div>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div
+              class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-all transform hover:-translate-y-1">
+              <div class="relative h-40">
+                <img src="https://images.unsplash.com/photo-1515162816999-a0c47dc192f7" alt="Pothole"
+                  class="w-full h-full object-cover" />
+                <div class="absolute top-3 right-3 bg-yellow-500 text-white rounded-full px-3 py-1 text-sm font-medium">
+                  In Progress
+                </div>
+              </div>
+              <div class="p-5">
+                <div class="flex justify-between items-center mb-3">
+                  <div class="flex items-center space-x-2">
+                    <span class="material-symbols-outlined text-gray-600">construction</span>
+                    <h3 class="font-semibold">Large Pothole</h3>
+                  </div>
+                  <span class="text-sm text-gray-500">2 days ago</span>
+                </div>
+                <p class="text-gray-600 mb-4 line-clamp-2">
+                  Deep pothole causing traffic hazards at the intersection. Several vehicles have been damaged.
+                </p>
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center space-x-1 text-gray-600 text-sm">
+                    <span class="material-symbols-outlined text-sm">location_on</span>
+                    <span>Main St &amp; 5th Ave</span>
+                  </div>
+                  <div class="flex items-center space-x-2">
+                    <button class="flex items-center space-x-1 text-gray-500 hover:text-gray-700">
+                      <span class="material-symbols-outlined text-sm">thumb_up</span>
+                      <span>24</span>
+                    </button>
+                    <button class="flex items-center space-x-1 text-gray-500 hover:text-gray-700">
+                      <span class="material-symbols-outlined text-sm">comment</span>
+                      <span>8</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-all transform hover:-translate-y-1">
+              <div class="relative h-40">
+                <img src="https://images.unsplash.com/photo-1566041510639-8d95a2490bfb" alt="Broken streetlight"
+                  class="w-full h-full object-cover" />
+                <div class="absolute top-3 right-3 bg-red-500 text-white rounded-full px-3 py-1 text-sm font-medium">
+                  Pending
+                </div>
+              </div>
+              <div class="p-5">
+                <div class="flex justify-between items-center mb-3">
+                  <div class="flex items-center space-x-2">
+                    <span class="material-symbols-outlined text-gray-600">lightbulb</span>
+                    <h3 class="font-semibold">Broken Streetlight</h3>
+                  </div>
+                  <span class="text-sm text-gray-500">5 hours ago</span>
+                </div>
+                <p class="text-gray-600 mb-4 line-clamp-2">
+                  Streetlight has been out for over a week, creating safety concerns for pedestrians at night.
+                </p>
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center space-x-1 text-gray-600 text-sm">
+                    <span class="material-symbols-outlined text-sm">location_on</span>
+                    <span>Oak Lane</span>
+                  </div>
+                  <div class="flex items-center space-x-2">
+                    <button class="flex items-center space-x-1 text-gray-500 hover:text-gray-700">
+                      <span class="material-symbols-outlined text-sm">thumb_up</span>
+                      <span>16</span>
+                    </button>
+                    <button class="flex items-center space-x-1 text-gray-500 hover:text-gray-700">
+                      <span class="material-symbols-outlined text-sm">comment</span>
+                      <span>4</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-all transform hover:-translate-y-1">
+              <div class="relative h-40">
+                <img src="https://images.unsplash.com/photo-1530587191325-3db32d826c18" alt="Overflowing trash bin"
+                  class="w-full h-full object-cover" />
+                <div class="absolute top-3 right-3 bg-green-500 text-white rounded-full px-3 py-1 text-sm font-medium">
+                  Resolved
+                </div>
+              </div>
+              <div class="p-5">
+                <div class="flex justify-between items-center mb-3">
+                  <div class="flex items-center space-x-2">
+                    <span class="material-symbols-outlined text-gray-600">delete</span>
+                    <h3 class="font-semibold">Overflowing Trash Bin</h3>
+                  </div>
+                  <span class="text-sm text-gray-500">1 week ago</span>
+                </div>
+                <p class="text-gray-600 mb-4 line-clamp-2">
+                  Public trash bin is constantly overflowing. Request for more frequent collection or additional bins.
+                </p>
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center space-x-1 text-gray-600 text-sm">
+                    <span class="material-symbols-outlined text-sm">location_on</span>
+                    <span>Central Park West</span>
+                  </div>
+                  <div class="flex items-center space-x-2">
+                    <button class="flex items-center space-x-1 text-gray-500 hover:text-gray-700">
+                      <span class="material-symbols-outlined text-sm">thumb_up</span>
+                      <span>32</span>
+                    </button>
+                    <button class="flex items-center space-x-1 text-gray-500 hover:text-gray-700">
+                      <span class="material-symbols-outlined text-sm">comment</span>
+                      <span>12</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="mt-6 text-center">
+            <button
+              class="bg-white border border-[#611BF8] rounded-full px-6 py-2 text-[#611BF8] text-sm font-medium flex items-center justify-center mx-auto space-x-1 transition-all hover:shadow-lg hover:-translate-y-1 hover:bg-[#611BF8] hover:text-white">
+              <span>View All Reports</span>
+              <span class="material-symbols-outlined">chevron_right</span>
+            </button>
+          </div>
+        </section>
+        <section class="mb-12">
+          <h2 class="text-2xl font-bold text-gray-800 mb-6">Issue Map</h2>
+          <div class="bg-white rounded-xl shadow-lg overflow-hidden h-[400px] relative">
+            <img src="https://images.unsplash.com/photo-1569336415962-a4bd9f69c07a" alt="City map with issue markers"
+              class="w-full h-full object-cover" />
+            <div class="absolute inset-0 flex items-center justify-center">
+              <div class="bg-white/90 rounded-lg p-8 max-w-md text-center">
+                <span class="material-symbols-outlined text-5xl text-primary-500 mb-3">map</span>
+                <h3 class="text-xl font-semibold mb-2">Interactive Issue Map</h3>
+                <p class="text-gray-600 mb-4">
+                  View all reported issues on an interactive map. Filter by issue type, status, or date reported.
+                </p>
+                <button class="bg-[#611BF8] text-white hover:bg-[#611BF8] px-6 py-2 rounded-lg transition-all">
+                  Open Full Map
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section class="mb-12">
+          <h2 class="text-2xl font-bold text-gray-800 mb-6">Impact Statistics</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-all">
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="text-gray-600 font-medium">Total Reports</h3>
+                <span class="material-symbols-outlined text-3xl text-primary-500">assignment</span>
+              </div>
+              <p class="text-3xl font-bold">1,248</p>
+              <p class="text-green-600 flex items-center mt-2 text-sm">
+                <span class="material-symbols-outlined text-sm">trending_up</span>
+                <span>12% increase</span>
+              </p>
+            </div>
+            <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-all">
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="text-gray-600 font-medium">Resolved Issues</h3>
+                <span class="material-symbols-outlined text-3xl text-green-500">task_alt</span>
+              </div>
+              <p class="text-3xl font-bold">876</p>
+              <p class="text-gray-500 text-sm mt-2">70% resolution rate</p>
+            </div>
+            <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-all">
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="text-gray-600 font-medium">Avg. Response Time</h3>
+                <span class="material-symbols-outlined text-3xl text-amber-500">schedule</span>
+              </div>
+              <p class="text-3xl font-bold">48h</p>
+              <p class="text-green-600 flex items-center mt-2 text-sm">
+                <span class="material-symbols-outlined text-sm">trending_down</span>
+                <span>8% decrease</span>
+              </p>
+            </div>
+            <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-all">
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="text-gray-600 font-medium">Active Users</h3>
+                <span class="material-symbols-outlined text-3xl text-blue-500">group</span>
+              </div>
+              <p class="text-3xl font-bold">5,723</p>
+              <p class="text-green-600 flex items-center mt-2 text-sm">
+                <span class="material-symbols-outlined text-sm">trending_up</span>
+                <span>22% increase</span>
+              </p>
+            </div>
+          </div>
+        </section>
+        <section class="mb-12">
+          <h2 class="text-2xl font-bold text-gray-800 mb-6">How It Works</h2>
+          <div class="bg-white rounded-xl shadow-md p-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div class="text-center">
+                <div class="w-16 h-16 bg-[#611BF8] rounded-full flex items-center justify-center mx-auto mb-4">
+                  <span class="material-symbols-outlined text-3xl text-primary-600">photo_camera</span>
+                </div>
+                <h3 class="text-lg font-semibold mb-2">1. Report an Issue</h3>
+                <p class="text-gray-600">
+                  Take a photo, add location details, and submit your civic issue report in seconds.
+                </p>
+              </div>
+              <div class="text-center">
+                <div class="w-16 h-16 bg-[#611BF8] rounded-full flex items-center justify-center mx-auto mb-4">
+                  <span class="material-symbols-outlined text-3xl text-primary-600">assignment_ind</span>
+                </div>
+                <h3 class="text-lg font-semibold mb-2">2. City Takes Action</h3>
+                <p class="text-gray-600">
+                  City staff receives your report, assigns it to the right department, and begins work.
+                </p>
+              </div>
+              <div class="text-center">
+                <div class="w-16 h-16 bg-[#611BF8] rounded-full flex items-center justify-center mx-auto mb-4">
+                  <span class="material-symbols-outlined text-3xl text-primary-600">check_circle</span>
+                </div>
+                <h3 class="text-lg font-semibold mb-2">3. Track Resolution</h3>
+                <p class="text-gray-600">
+                  Receive notifications as your issue progresses from acknowledgment to resolution.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+         <section class="mb-12">
+          <div class="bg-gradient-to-r from-[#611BF8] to-[#4607d0] p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-8 text-white font-semibold text-lg rounded-xl shadow-xl overflow-hidden">
+            <div class="grid grid-cols-1 md:grid-cols-2">
+              <div class="p-8 md:p-12 flex flex-col justify-center">
+                <h2 class="text-3xl font-bold text-white mb-4">Get the Mobile App</h2>
+                <p class="text-white/90 mb-6">
+                  Report issues on the go, receive real-time updates, and make your community better with our mobile app.
+                </p>
+                <div class="flex flex-row space-x-4 items-center">
+                  <!-- Official App Store Badge (must use only provided asset) -->
+                  <a href="YOUR_APP_STORE_LINK_HERE" target="_blank" rel="noopener noreferrer">
+                    <img src="../public/Download_on_the_App_Store_Badge_US-UK_RGB_blk_092917.svg"
+                         alt="Download on the App Store"
+                         class="h-12 object-contain" />
+                  </a>
+                  <!-- Official Google Play Badge -->
+                  <a href="YOUR_GOOGLE_PLAY_LINK_HERE" target="_blank" rel="noopener noreferrer">
+                    <img src="../public/GetItOnGooglePlay_Badge_Print_color_English.svg"
+                         alt="Get it on Google Play"
+                         class="h-12 object-contain"
+                         viewBox="10 10 135 40" />
+                  </a>
+                </div>
+              </div>
+              <div class="flex justify-center items-center p-8 relative md:h-auto">
+                <img src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c"
+                     alt="Mobile app interface"
+                     class="max-h-96 object-contain shadow-2xl rounded-xl border-8 border-white transform rotate-3 transition-transform hover:rotate-0" />
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+      <footer class="bg-gray-800 text-white py-12">
+        <div class="container mx-auto px-4">
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+            <div>
+              <div class="flex items-center space-x-2 mb-4">
+                <span class="material-symbols-outlined text-2xl">location_city</span>
+                <h3 class="text-xl font-bold">CivicFix</h3>
+              </div>
+              <p class="text-gray-400 mb-4">
+                Empowering citizens to improve their communities through collaborative issue reporting and resolution
+                tracking.
+              </p>
+              <div class="flex space-x-4">
+                <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                  <i class="fa-brands fa-facebook text-xl"></i>
+                </a>
+                <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                  <i class="fa-brands fa-twitter text-xl"></i>
+                </a>
+                <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                  <i class="fa-brands fa-instagram text-xl"></i>
+                </a>
+                <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                  <i class="fa-brands fa-linkedin text-xl"></i>
+                </a>
+              </div>
+            </div>
+            <div>
+              <h3 class="text-lg font-semibold mb-4">Quick Links</h3>
+              <ul class="space-y-2">
+                <li>
+                  <a href="#" class="text-gray-400 hover:text-white transition-colors">Home</a>
+                </li>
+                <li>
+                  <a href="#" class="text-gray-400 hover:text-white transition-colors">Report an Issue</a>
+                </li>
+                <li>
+                  <a href="#" class="text-gray-400 hover:text-white transition-colors">View Map</a>
+                </li>
+                <li>
+                  <a href="#" class="text-gray-400 hover:text-white transition-colors">Dashboard</a>
+                </li>
+                <li>
+                  <a href="#" class="text-gray-400 hover:text-white transition-colors">Community</a>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h3 class="text-lg font-semibold mb-4">Support</h3>
+              <ul class="space-y-2">
+                <li>
+                  <a href="#" class="text-gray-400 hover:text-white transition-colors">Help Center</a>
+                </li>
+                <li>
+                  <a href="#" class="text-gray-400 hover:text-white transition-colors">FAQs</a>
+                </li>
+                <li>
+                  <a href="#" class="text-gray-400 hover:text-white transition-colors">Contact Us</a>
+                </li>
+                <li>
+                  <a href="#" class="text-gray-400 hover:text-white transition-colors">Privacy Policy</a>
+                </li>
+                <li>
+                  <a href="#" class="text-gray-400 hover:text-white transition-colors">Terms of Service</a>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h3 class="text-lg font-semibold mb-4">Stay Updated</h3>
+              <p class="text-gray-400 mb-4">
+                Subscribe to our newsletter for updates on civic improvements.
+              </p>
+              <form>
+                <div class="flex">
+                  <input type="email" placeholder="Your email address"
+                    class="px-4 py-2 rounded-l-lg w-full focus:outline-none text-gray-800 bg-white" />
+                  <button class="bg-[#611BF8] hover:bg-[#611BF8] transition-colors px-4 py-2 rounded-r-lg">
+                    <span class="material-symbols-outlined">send</span>
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+          <div class="pt-8 border-t border-gray-700 text-center text-gray-400">
+            <p>© 2025 CivicFix. All rights reserved.</p>
+          </div>
+        </div>
+      </footer>
+      <div class="md:hidden fixed bottom-6 right-6">
+        <button
+          class="bg-[#611BF8] text-white rounded-full w-14 h-14 flex items-center justify-center shadow-lg hover:bg-[#611BF8] transition-all">
+          <span class="material-symbols-outlined text-2xl">add</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</body>
+
+</html>
