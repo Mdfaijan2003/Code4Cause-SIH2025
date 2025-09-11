@@ -1,0 +1,1441 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CivicSense Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <!-- Main dashboard layout -->
+    <div id="webcrumbs" class="min-h-screen bg-gray-50 flex">
+        <!-- Sidebar -->
+        <div class="w-64 bg-white shadow-lg hidden md:block rounded-r-lg">
+            <div class="p-6">
+                <h1 class="text-2xl font-bold flex items-center">
+                    <span class="material-symbols-outlined text-green-500 mr-2">
+                        campaign
+                    </span>
+                    CivicSense
+                </h1>
+            </div>
+            <nav class="mt-6">
+                <div class="px-4">
+                    <button data-view="dashboard" class="nav-item bg-green-100 rounded-lg p-3 flex items-center text-green-700 font-medium w-full text-left transition-colors">
+                        <span class="material-symbols-outlined mr-3">dashboard</span> Dashboard
+                    </button>
+                    <button id="issue-button" data-view="issues" class="nav-item p-3 flex items-center text-gray-600 hover:bg-gray-100 rounded-lg transition-colors font-medium cursor-pointer mt-2 w-full text-left">
+                        <span class="material-symbols-outlined mr-3">report_problem</span> Issues
+                    </button>
+                    <button data-view="resolutions" class="nav-item p-3 flex items-center text-gray-600 hover:bg-gray-100 rounded-lg transition-colors font-medium cursor-pointer mt-2 w-full text-left">
+                        <span class="material-symbols-outlined mr-3">fact_check</span> Resolutions
+                    </button>
+                    <button data-view="community" class="nav-item p-3 flex items-center text-gray-600 hover:bg-gray-100 rounded-lg transition-colors font-medium cursor-pointer mt-2 w-full text-left">
+                        <span class="material-symbols-outlined mr-3">public</span> Community
+                    </button>
+                    <button data-view="analytics" class="nav-item p-3 flex items-center text-gray-600 hover:bg-gray-100 rounded-lg transition-colors font-medium cursor-pointer mt-2 w-full text-left">
+                        <span class="material-symbols-outlined mr-3">leaderboard</span> Analytics
+                    </button>
+                    <button data-view="settings" class="nav-item p-3 flex items-center text-gray-600 hover:bg-gray-100 rounded-lg transition-colors font-medium cursor-pointer mt-2 w-full text-left">
+                        <span class="material-symbols-outlined mr-3">settings</span> Settings
+                    </button>
+                </div>
+            </nav>
+            <div class="absolute bottom-0 p-4 w-64">
+                <div class="bg-gray-50 p-3 rounded-lg">
+                    <div class="flex items-center">
+                        <img src="https://placehold.co/100x100/A5F3FC/000000?text=JD"
+                            alt="User profile" class="w-10 h-10 rounded-full object-cover" />
+                        <div class="ml-3">
+                            <p class="text-sm font-medium">John Doe</p>
+                            <p class="text-xs text-gray-500">Community Manager</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="flex-1 overflow-auto">
+            <header class="bg-white shadow-sm p-4 flex justify-between items-center rounded-bl-lg">
+                <div class="flex items-center md:hidden">
+                    <button class="p-2 rounded-full hover:bg-gray-100 transition-colors">
+                        <span class="material-symbols-outlined">menu</span>
+                    </button>
+                </div>
+                <div class="flex items-center rounded-lg bg-gray-100 px-3 py-2 ml-4 flex-1 max-w-md">
+                    <span class="material-symbols-outlined text-gray-500 mr-2">search</span>
+                    <input class="bg-transparent border-none outline-none flex-1 text-sm"
+                        placeholder="Search issues, locations..." />
+                </div>
+                <div class="flex items-center">
+                    <button class="p-2 rounded-full hover:bg-gray-100 transition-colors relative">
+                        <span class="material-symbols-outlined">notifications</span>
+                        <span class="absolute top-1 right-1 bg-green-500 text-white text-xs w-4 h-4 flex items-center justify-center rounded-full">3</span>
+                    </button>
+                    <button class="p-2 rounded-full hover:bg-gray-100 transition-colors ml-2">
+                        <span class="material-symbols-outlined">help</span>
+                    </button>
+                </div>
+            </header>
+
+            <main class="p-6">
+                <!-- Dashboard View -->
+                <div id="dashboard-view" class="view">
+                    <div class="flex flex-col md:flex-row items-center justify-between mb-6">
+                        <h1 class="text-2xl font-bold mb-4 md:mb-0">Civic Issues Dashboard</h1>
+                        <div class="flex space-x-2">
+                            <div class="relative">
+                                <details class="group">
+                                    <summary class="cursor-pointer flex items-center bg-white border rounded-lg px-4 py-2 shadow-sm hover:bg-gray-50 transition-colors">
+                                        <span class="material-symbols-outlined mr-2">today</span>
+                                        <span>This Week</span>
+                                        <span class="material-symbols-outlined ml-2">expand_more</span>
+                                    </summary>
+                                    <div class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg z-10 overflow-hidden">
+                                        <div class="p-2 hover:bg-gray-100 cursor-pointer transition-colors">Today</div>
+                                        <div class="p-2 hover:bg-gray-100 cursor-pointer transition-colors">This Week</div>
+                                        <div class="p-2 hover:bg-gray-100 cursor-pointer transition-colors">This Month</div>
+                                        <div class="p-2 hover:bg-gray-100 cursor-pointer transition-colors">This Year</div>
+                                    </div>
+                                </details>
+                            </div>
+                            <button id="report-issue-btn" class="flex items-center bg-green-600 text-white rounded-lg px-4 py-2 hover:bg-green-700 transition-colors shadow-sm">
+                                <span class="material-symbols-outlined mr-2">add</span> Report Issue
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Stats Cards -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+                        <div class="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
+                            <div class="flex items-center">
+                                <div class="p-3 bg-blue-50 rounded-lg">
+                                    <span class="material-symbols-outlined text-blue-500">report_problem</span>
+                                </div>
+                                <div class="ml-4">
+                                    <p class="text-sm text-gray-500">Total Issues</p>
+                                    <h3 id="total-issues" class="text-2xl font-bold">...</h3>
+                                </div>
+                            </div>
+                            <div class="mt-4 flex items-center text-sm">
+                                <span class="text-green-500 flex items-center">
+                                    <span class="material-symbols-outlined text-sm">trending_up</span>
+                                    12%
+                                </span>
+                                <span class="text-gray-500 ml-2">vs last week</span>
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
+                            <div class="flex items-center">
+                                <div class="p-3 bg-green-50 rounded-lg">
+                                    <span class="material-symbols-outlined text-green-500">check_circle</span>
+                                </div>
+                                <div class="ml-4">
+                                    <p class="text-sm text-gray-500">Resolved</p>
+                                    <h3 id="resolved-issues" class="text-2xl font-bold">...</h3>
+                                </div>
+                            </div>
+                            <div class="mt-4 flex items-center text-sm">
+                                <span class="text-green-500 flex items-center">
+                                    <span class="material-symbols-outlined text-sm">trending_up</span>
+                                    8%
+                                </span>
+                                <span class="text-gray-500 ml-2">vs last week</span>
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
+                            <div class="flex items-center">
+                                <div class="p-3 bg-yellow-50 rounded-lg">
+                                    <span class="material-symbols-outlined text-yellow-500">pending</span>
+                                </div>
+                                <div class="ml-4">
+                                    <p class="text-sm text-gray-500">In Progress</p>
+                                    <h3 id="in-progress-issues" class="text-2xl font-bold">...</h3>
+                                </div>
+                            </div>
+                            <div class="mt-4 flex items-center text-sm">
+                                <span class="text-red-500 flex items-center">
+                                    <span class="material-symbols-outlined text-sm">trending_down</span>
+                                    3%
+                                </span>
+                                <span class="text-gray-500 ml-2">vs last week</span>
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
+                            <div class="flex items-center">
+                                <div class="p-3 bg-green-50 rounded-lg">
+                                    <span class="material-symbols-outlined text-green-500">volunteer_activism</span>
+                                </div>
+                                <div class="ml-4">
+                                    <p class="text-sm text-gray-500">Community Score</p>
+                                    <h3 class="text-2xl font-bold">87%</h3>
+                                </div>
+                            </div>
+                            <div class="mt-4 flex items-center text-sm">
+                                <span class="text-green-500 flex items-center">
+                                    <span class="material-symbols-outlined text-sm">trending_up</span>
+                                    5%
+                                </span>
+                                <span class="text-gray-500 ml-2">vs last week</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Charts Section -->
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+                        <div class="bg-white rounded-xl p-6 shadow-sm col-span-1 lg:col-span-2 h-[400px]">
+                            <div class="flex justify-between items-center mb-6">
+                                <h2 class="font-bold text-lg">Issue Trends</h2>
+                            </div>
+                            <div class="h-[300px]">
+                                <canvas id="issue-trends-chart"></canvas>
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-xl p-6 shadow-sm">
+                            <h2 class="font-bold text-lg mb-6">Issue Categories</h2>
+                            <div class="h-[300px]">
+                                <canvas id="issue-categories-chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-8 flex flex-col md:flex-row md:items-center md:justify-between">
+          <div>
+            <h2 class="text-2xl font-bold text-gray-900">Civic Issues Dashboard</h2>
+            <p class="text-gray-600 mt-1">Track, manage, and resolve community issues</p>
+          </div>
+          <div class="mt-4 md:mt-0 flex flex-col sm:flex-row gap-3">
+            <div class="relative"> <input type="text" placeholder="Search issues..."
+                class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 w-full" />
+              <span class="material-symbols-outlined absolute left-3 top-2.5 text-gray-400">search</span> </div> <button
+              class="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors flex items-center justify-center">
+              <span class="material-symbols-outlined mr-1">add</span> Report Issue </button>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+          <div class="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
+            <div class="flex items-center">
+              <div class="bg-blue-100 p-3 rounded-full"> <span
+                  class="material-symbols-outlined text-blue-600">pending_actions</span> </div>
+              <div class="ml-4">
+                <h3 class="text-lg font-semibold">Open Issues</h3>
+                <p class="text-3xl font-bold">247</p>
+              </div>
+            </div>
+            <div class="mt-2 text-sm text-gray-500"> <span class="text-green-600 font-medium">↓ 12%</span> from last
+              month </div>
+          </div>
+          <div class="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
+            <div class="flex items-center">
+              <div class="bg-green-100 p-3 rounded-full"> <span
+                  class="material-symbols-outlined text-green-600">task_alt</span> </div>
+              <div class="ml-4">
+                <h3 class="text-lg font-semibold">Resolved</h3>
+                <p class="text-3xl font-bold">189</p>
+              </div>
+            </div>
+            <div class="mt-2 text-sm text-gray-500"> <span class="text-green-600 font-medium">↑ 23%</span> from last
+              month </div>
+          </div>
+          <div class="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
+            <div class="flex items-center">
+              <div class="bg-yellow-100 p-3 rounded-full"> <span
+                  class="material-symbols-outlined text-yellow-600">schedule</span> </div>
+              <div class="ml-4">
+                <h3 class="text-lg font-semibold">In Progress</h3>
+                <p class="text-3xl font-bold">83</p>
+              </div>
+            </div>
+            <div class="mt-2 text-sm text-gray-500"> <span class="text-yellow-600 font-medium">↑ 7%</span> from last
+              month </div>
+          </div>
+          <div class="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
+            <div class="flex items-center">
+              <div class="bg-purple-100 p-3 rounded-full"> <span
+                  class="material-symbols-outlined text-purple-600">people</span> </div>
+              <div class="ml-4">
+                <h3 class="text-lg font-semibold">Participants</h3>
+                <p class="text-3xl font-bold">1,542</p>
+              </div>
+            </div>
+            <div class="mt-2 text-sm text-gray-500"> <span class="text-green-600 font-medium">↑ 18%</span> from last
+              month </div>
+          </div>
+        </div>
+        <div class="bg-white rounded-lg shadow-sm p-4 mb-8">
+          <div class="flex flex-wrap items-center gap-4">
+            <div class="flex items-center"> <span class="text-gray-500 mr-2">Filter by:</span> </div>
+            <details class="relative">
+              <summary
+                class="flex items-center px-3 py-2 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50">
+                <span class="material-symbols-outlined mr-1 text-gray-500">category</span> Category <span
+                  class="material-symbols-outlined ml-1 text-gray-500 text-sm">arrow_drop_down</span> </summary>
+              <div class="absolute mt-1 bg-white shadow-md rounded-lg p-2 z-10 w-48">
+                <div class="py-1 px-2 hover:bg-gray-100 rounded cursor-pointer">Road Maintenance</div>
+                <div class="py-1 px-2 hover:bg-gray-100 rounded cursor-pointer">Waste Management</div>
+                <div class="py-1 px-2 hover:bg-gray-100 rounded cursor-pointer">Public Safety</div>
+                <div class="py-1 px-2 hover:bg-gray-100 rounded cursor-pointer">Street Lighting</div>
+                <div class="py-1 px-2 hover:bg-gray-100 rounded cursor-pointer">Parks &amp; Recreation</div>
+              </div>
+            </details>
+            <details class="relative">
+              <summary
+                class="flex items-center px-3 py-2 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50">
+                <span class="material-symbols-outlined mr-1 text-gray-500">priority_high</span> Priority <span
+                  class="material-symbols-outlined ml-1 text-gray-500 text-sm">arrow_drop_down</span> </summary>
+              <div class="absolute mt-1 bg-white shadow-md rounded-lg p-2 z-10 w-36">
+                <div class="py-1 px-2 hover:bg-gray-100 rounded cursor-pointer flex items-center"> <span
+                    class="h-2 w-2 rounded-full bg-red-500 mr-2"></span> High </div>
+                <div class="py-1 px-2 hover:bg-gray-100 rounded cursor-pointer flex items-center"> <span
+                    class="h-2 w-2 rounded-full bg-yellow-500 mr-2"></span> Medium </div>
+                <div class="py-1 px-2 hover:bg-gray-100 rounded cursor-pointer flex items-center"> <span
+                    class="h-2 w-2 rounded-full bg-green-500 mr-2"></span> Low </div>
+              </div>
+            </details>
+            <details class="relative">
+              <summary
+                class="flex items-center px-3 py-2 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50">
+                <span class="material-symbols-outlined mr-1 text-gray-500">location_on</span> Location <span
+                  class="material-symbols-outlined ml-1 text-gray-500 text-sm">arrow_drop_down</span> </summary>
+              <div class="absolute mt-1 bg-white shadow-md rounded-lg p-2 z-10 w-48">
+                <div class="py-1 px-2 hover:bg-gray-100 rounded cursor-pointer">Downtown</div>
+                <div class="py-1 px-2 hover:bg-gray-100 rounded cursor-pointer">Northside</div>
+                <div class="py-1 px-2 hover:bg-gray-100 rounded cursor-pointer">Westpark</div>
+                <div class="py-1 px-2 hover:bg-gray-100 rounded cursor-pointer">Riverfront</div>
+                <div class="py-1 px-2 hover:bg-gray-100 rounded cursor-pointer">East End</div>
+              </div>
+            </details>
+            <details class="relative">
+              <summary
+                class="flex items-center px-3 py-2 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50">
+                <span class="material-symbols-outlined mr-1 text-gray-500">pending</span> Status <span
+                  class="material-symbols-outlined ml-1 text-gray-500 text-sm">arrow_drop_down</span> </summary>
+              <div class="absolute mt-1 bg-white shadow-md rounded-lg p-2 z-10 w-40">
+                <div class="py-1 px-2 hover:bg-gray-100 rounded cursor-pointer">Open</div>
+                <div class="py-1 px-2 hover:bg-gray-100 rounded cursor-pointer">In Progress</div>
+                <div class="py-1 px-2 hover:bg-gray-100 rounded cursor-pointer">Under Review</div>
+                <div class="py-1 px-2 hover:bg-gray-100 rounded cursor-pointer">Resolved</div>
+                <div class="py-1 px-2 hover:bg-gray-100 rounded cursor-pointer">Closed</div>
+              </div>
+            </details> <button
+              class="ml-auto px-3 py-2 text-primary-600 hover:bg-primary-50 rounded-lg transition-colors flex items-center">
+              <span class="material-symbols-outlined mr-1">refresh</span> Reset Filters </button>
+          </div>
+        </div>
+        <div class="bg-white rounded-lg shadow-sm overflow-hidden mb-8">
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th scope="col"
+                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                  <th scope="col"
+                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Issue</th>
+                  <th scope="col"
+                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location</th>
+                  <th scope="col"
+                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
+                  <th scope="col"
+                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                  <th scope="col"
+                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Reported</th>
+                  <th scope="col"
+                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Priority</th>
+                  <th scope="col"
+                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                <tr class="hover:bg-gray-50 transition-colors">
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">#1283</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm">
+                    <div class="flex items-center"> <img
+                        src="https://images.unsplash.com/photo-1560782202-154b39d57ef2?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3w3MzkyNDZ8MHwxfHNlYXJjaHwxfHxwb3Rob2xlfGVufDB8fHx8MTc1NzU2MjQ3OHww&amp;ixlib=rb-4.1.0&amp;q=80&amp;w=1080"
+                        alt="Pothole" class="h-10 w-10 rounded-md object-cover mr-3"
+                        keywords="pothole, road damage, street repair" />
+                      <div>
+                        <div class="font-medium">Large Pothole</div>
+                        <div class="text-gray-500 text-xs">4 upvotes</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Main St &amp; 5th Ave</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Road Maintenance</td>
+                  <td class="px-6 py-4 whitespace-nowrap"> <span
+                      class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">In
+                      Progress</span> </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Jun 12, 2023</td>
+                  <td class="px-6 py-4 whitespace-nowrap"> <span class="flex items-center"> <span
+                        class="h-2.5 w-2.5 rounded-full bg-red-500 mr-2"></span> <span class="text-sm">High</span>
+                    </span> </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <div class="flex space-x-2"> <button
+                        class="text-blue-600 hover:text-blue-800 p-1 rounded-full hover:bg-blue-100 transition-colors">
+                        <span class="material-symbols-outlined text-sm">visibility</span> </button> <button
+                        class="text-green-600 hover:text-green-800 p-1 rounded-full hover:bg-green-100 transition-colors">
+                        <span class="material-symbols-outlined text-sm">edit</span> </button> <button
+                        class="text-primary-600 hover:text-primary-800 p-1 rounded-full hover:bg-primary-100 transition-colors">
+                        <span class="material-symbols-outlined text-sm">comment</span> </button> </div>
+                  </td>
+                </tr>
+                <tr class="hover:bg-gray-50 transition-colors">
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">#1282</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm">
+                    <div class="flex items-center"> <img
+                        src="https://images.unsplash.com/photo-1543518360-68b9612a7c8c?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3w3MzkyNDZ8MHwxfHNlYXJjaHwxfHxzdHJlZXQlMjBsaWdodHxlbnwwfHx8fDE3NTc1NjI0Nzl8MA&amp;ixlib=rb-4.1.0&amp;q=80&amp;w=1080"
+                        alt="Broken street light" class="h-10 w-10 rounded-md object-cover mr-3"
+                        keywords="street light, broken lamp, night safety" />
+                      <div>
+                        <div class="font-medium">Broken Street Light</div>
+                        <div class="text-gray-500 text-xs">8 upvotes</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Oak Avenue</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Street Lighting</td>
+                  <td class="px-6 py-4 whitespace-nowrap"> <span
+                      class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Resolved</span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Jun 10, 2023</td>
+                  <td class="px-6 py-4 whitespace-nowrap"> <span class="flex items-center"> <span
+                        class="h-2.5 w-2.5 rounded-full bg-yellow-500 mr-2"></span> <span class="text-sm">Medium</span>
+                    </span> </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <div class="flex space-x-2"> <button
+                        class="text-blue-600 hover:text-blue-800 p-1 rounded-full hover:bg-blue-100 transition-colors">
+                        <span class="material-symbols-outlined text-sm">visibility</span> </button> <button
+                        class="text-green-600 hover:text-green-800 p-1 rounded-full hover:bg-green-100 transition-colors">
+                        <span class="material-symbols-outlined text-sm">edit</span> </button> <button
+                        class="text-primary-600 hover:text-primary-800 p-1 rounded-full hover:bg-primary-100 transition-colors">
+                        <span class="material-symbols-outlined text-sm">comment</span> </button> </div>
+                  </td>
+                </tr>
+                <tr class="hover:bg-gray-50 transition-colors">
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">#1281</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm">
+                    <div class="flex items-center"> <img
+                        src="https://images.unsplash.com/photo-1487452066049-a710f7296400?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3w3MzkyNDZ8MHwxfHNlYXJjaHwxfHxncmFmZml0aXxlbnwwfHx8fDE3NTc1NjI0ODF8MA&amp;ixlib=rb-4.1.0&amp;q=80&amp;w=1080"
+                        alt="Graffiti on wall" class="h-10 w-10 rounded-md object-cover mr-3"
+                        keywords="graffiti, vandalism, wall, public property" />
+                      <div>
+                        <div class="font-medium">Graffiti on Public Building</div>
+                        <div class="text-gray-500 text-xs">2 upvotes</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Community Center</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Public Property</td>
+                  <td class="px-6 py-4 whitespace-nowrap"> <span
+                      class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">Under
+                      Review</span> </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Jun 9, 2023</td>
+                  <td class="px-6 py-4 whitespace-nowrap"> <span class="flex items-center"> <span
+                        class="h-2.5 w-2.5 rounded-full bg-green-500 mr-2"></span> <span class="text-sm">Low</span>
+                    </span> </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <div class="flex space-x-2"> <button
+                        class="text-blue-600 hover:text-blue-800 p-1 rounded-full hover:bg-blue-100 transition-colors">
+                        <span class="material-symbols-outlined text-sm">visibility</span> </button> <button
+                        class="text-green-600 hover:text-green-800 p-1 rounded-full hover:bg-green-100 transition-colors">
+                        <span class="material-symbols-outlined text-sm">edit</span> </button> <button
+                        class="text-primary-600 hover:text-primary-800 p-1 rounded-full hover:bg-primary-100 transition-colors">
+                        <span class="material-symbols-outlined text-sm">comment</span> </button> </div>
+                  </td>
+                </tr>
+                <tr class="hover:bg-gray-50 transition-colors">
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">#1280</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm">
+                    <div class="flex items-center"> <img
+                        src="https://images.unsplash.com/photo-1605600659873-d808a13e4d2a?ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&amp;auto=format&amp;fit=crop&amp;w=100&amp;q=80"
+                        alt="Overflowing trash bin" class="h-10 w-10 rounded-md object-cover mr-3"
+                        keywords="trash, garbage, waste, overflow, bin" />
+                      <div>
+                        <div class="font-medium">Overflowing Trash Bins</div>
+                        <div class="text-gray-500 text-xs">12 upvotes</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Riverfront Park</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Waste Management</td>
+                  <td class="px-6 py-4 whitespace-nowrap"> <span
+                      class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">Open</span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Jun 8, 2023</td>
+                  <td class="px-6 py-4 whitespace-nowrap"> <span class="flex items-center"> <span
+                        class="h-2.5 w-2.5 rounded-full bg-red-500 mr-2"></span> <span class="text-sm">High</span>
+                    </span> </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <div class="flex space-x-2"> <button
+                        class="text-blue-600 hover:text-blue-800 p-1 rounded-full hover:bg-blue-100 transition-colors">
+                        <span class="material-symbols-outlined text-sm">visibility</span> </button> <button
+                        class="text-green-600 hover:text-green-800 p-1 rounded-full hover:bg-green-100 transition-colors">
+                        <span class="material-symbols-outlined text-sm">edit</span> </button> <button
+                        class="text-primary-600 hover:text-primary-800 p-1 rounded-full hover:bg-primary-100 transition-colors">
+                        <span class="material-symbols-outlined text-sm">comment</span> </button> </div>
+                  </td>
+                </tr>
+                <tr class="hover:bg-gray-50 transition-colors">
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">#1279</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm">
+                    <div class="flex items-center"> <img
+                        src="https://images.unsplash.com/photo-1575783970733-1aaedde1db74?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3w3MzkyNDZ8MHwxfHNlYXJjaHwxfHxwbGF5Z3JvdW5kfGVufDB8fHx8MTc1NzU2MjQ4NHww&amp;ixlib=rb-4.1.0&amp;q=80&amp;w=1080"
+                        alt="Broken playground equipment" class="h-10 w-10 rounded-md object-cover mr-3"
+                        keywords="playground, broken, children, safety, park" />
+                      <div>
+                        <div class="font-medium">Damaged Playground Equipment</div>
+                        <div class="text-gray-500 text-xs">7 upvotes</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Central Park</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Parks &amp; Recreation</td>
+                  <td class="px-6 py-4 whitespace-nowrap"> <span
+                      class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">In
+                      Progress</span> </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Jun 7, 2023</td>
+                  <td class="px-6 py-4 whitespace-nowrap"> <span class="flex items-center"> <span
+                        class="h-2.5 w-2.5 rounded-full bg-red-500 mr-2"></span> <span class="text-sm">High</span>
+                    </span> </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <div class="flex space-x-2"> <button
+                        class="text-blue-600 hover:text-blue-800 p-1 rounded-full hover:bg-blue-100 transition-colors">
+                        <span class="material-symbols-outlined text-sm">visibility</span> </button> <button
+                        class="text-green-600 hover:text-green-800 p-1 rounded-full hover:bg-green-100 transition-colors">
+                        <span class="material-symbols-outlined text-sm">edit</span> </button> <button
+                        class="text-primary-600 hover:text-primary-800 p-1 rounded-full hover:bg-primary-100 transition-colors">
+                        <span class="material-symbols-outlined text-sm">comment</span> </button> </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="px-6 py-4 flex items-center justify-between border-t border-gray-200">
+            <div class="flex-1 flex justify-between sm:hidden"> <button
+                class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                Previous </button> <button
+                class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                Next </button> </div>
+            <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+              <div>
+                <p class="text-sm text-gray-700"> Showing <span class="font-medium">1</span> to <span
+                    class="font-medium">5</span> of <span class="font-medium">247</span> results </p>
+              </div>
+              <div>
+                <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination"> <button
+                    class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                    <span class="material-symbols-outlined text-sm">chevron_left</span> </button> <button
+                    class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
+                    1 </button> </nav>
+              </div>
+            </div>
+          </div>
+        </div>
+
+                <!-- Issues View -->
+                <div id="issues-view" class="view hidden">
+                    <div class="mb-8 flex flex-col md:flex-row md:items-center md:justify-between">
+                        <div>
+                          <h2 class="text-2xl font-bold text-gray-900">Civic Issues Dashboard</h2>
+                          <p class="text-gray-600 mt-1">Track, manage, and resolve community issues</p>
+                        </div>
+                        <div class="mt-4 md:mt-0 flex flex-col sm:flex-row gap-3">
+                          <div class="relative"> <input type="text" placeholder="Search issues..."
+                              class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 w-full" />
+                            <span class="material-symbols-outlined absolute left-3 top-2.5 text-gray-400">search</span> </div> <button
+                            class="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors flex items-center justify-center">
+                            <span class="material-symbols-outlined mr-1">add</span> Report Issue </button>
+                        </div>
+                      </div>
+                      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                        <div class="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
+                          <div class="flex items-center">
+                            <div class="bg-blue-100 p-3 rounded-full"> <span
+                                class="material-symbols-outlined text-blue-600">pending_actions</span> </div>
+                            <div class="ml-4">
+                              <h3 class="text-lg font-semibold">Open Issues</h3>
+                              <p class="text-3xl font-bold">247</p>
+                            </div>
+                          </div>
+                          <div class="mt-2 text-sm text-gray-500"> <span class="text-green-600 font-medium">↓ 12%</span> from last
+                            month </div>
+                        </div>
+                        <div class="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
+                          <div class="flex items-center">
+                            <div class="bg-green-100 p-3 rounded-full"> <span
+                                class="material-symbols-outlined text-green-600">task_alt</span> </div>
+                            <div class="ml-4">
+                              <h3 class="text-lg font-semibold">Resolved</h3>
+                              <p class="text-3xl font-bold">189</p>
+                            </div>
+                          </div>
+                          <div class="mt-2 text-sm text-gray-500"> <span class="text-green-600 font-medium">↑ 23%</span> from last
+                            month </div>
+                        </div>
+                        <div class="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
+                          <div class="flex items-center">
+                            <div class="bg-yellow-100 p-3 rounded-full"> <span
+                                class="material-symbols-outlined text-yellow-600">schedule</span> </div>
+                            <div class="ml-4">
+                              <h3 class="text-lg font-semibold">In Progress</h3>
+                              <p class="text-3xl font-bold">83</p>
+                            </div>
+                          </div>
+                          <div class="mt-2 text-sm text-gray-500"> <span class="text-yellow-600 font-medium">↑ 7%</span> from last
+                            month </div>
+                        </div>
+                        <div class="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
+                          <div class="flex items-center">
+                            <div class="bg-purple-100 p-3 rounded-full"> <span
+                                class="material-symbols-outlined text-purple-600">people</span> </div>
+                            <div class="ml-4">
+                              <h3 class="text-lg font-semibold">Participants</h3>
+                              <p class="text-3xl font-bold">1,542</p>
+                            </div>
+                          </div>
+                          <div class="mt-2 text-sm text-gray-500"> <span class="text-green-600 font-medium">↑ 18%</span> from last
+                            month </div>
+                        </div>
+                      </div>
+                      <div class="bg-white rounded-lg shadow-sm p-4 mb-8">
+                        <div class="flex flex-wrap items-center gap-4">
+                          <div class="flex items-center"> <span class="text-gray-500 mr-2">Filter by:</span> </div>
+                          <details class="relative">
+                            <summary
+                              class="flex items-center px-3 py-2 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50">
+                              <span class="material-symbols-outlined mr-1 text-gray-500">category</span> Category <span
+                                class="material-symbols-outlined ml-1 text-gray-500 text-sm">arrow_drop_down</span> </summary>
+                            <div class="absolute mt-1 bg-white shadow-md rounded-lg p-2 z-10 w-48">
+                              <div class="py-1 px-2 hover:bg-gray-100 rounded cursor-pointer">Road Maintenance</div>
+                              <div class="py-1 px-2 hover:bg-gray-100 rounded cursor-pointer">Waste Management</div>
+                              <div class="py-1 px-2 hover:bg-gray-100 rounded cursor-pointer">Public Safety</div>
+                              <div class="py-1 px-2 hover:bg-gray-100 rounded cursor-pointer">Street Lighting</div>
+                              <div class="py-1 px-2 hover:bg-gray-100 rounded cursor-pointer">Parks &amp; Recreation</div>
+                            </div>
+                          </details>
+                          <details class="relative">
+                            <summary
+                              class="flex items-center px-3 py-2 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50">
+                              <span class="material-symbols-outlined mr-1 text-gray-500">priority_high</span> Priority <span
+                                class="material-symbols-outlined ml-1 text-gray-500 text-sm">arrow_drop_down</span> </summary>
+                            <div class="absolute mt-1 bg-white shadow-md rounded-lg p-2 z-10 w-36">
+                              <div class="py-1 px-2 hover:bg-gray-100 rounded cursor-pointer flex items-center"> <span
+                                  class="h-2 w-2 rounded-full bg-red-500 mr-2"></span> High </div>
+                              <div class="py-1 px-2 hover:bg-gray-100 rounded cursor-pointer flex items-center"> <span
+                                  class="h-2 w-2 rounded-full bg-yellow-500 mr-2"></span> Medium </div>
+                              <div class="py-1 px-2 hover:bg-gray-100 rounded cursor-pointer flex items-center"> <span
+                                  class="h-2 w-2 rounded-full bg-green-500 mr-2"></span> Low </div>
+                            </div>
+                          </details>
+                          <details class="relative">
+                            <summary
+                              class="flex items-center px-3 py-2 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50">
+                              <span class="material-symbols-outlined mr-1 text-gray-500">location_on</span> Location <span
+                                class="material-symbols-outlined ml-1 text-gray-500 text-sm">arrow_drop_down</span> </summary>
+                            <div class="absolute mt-1 bg-white shadow-md rounded-lg p-2 z-10 w-48">
+                              <div class="py-1 px-2 hover:bg-gray-100 rounded cursor-pointer">Downtown</div>
+                              <div class="py-1 px-2 hover:bg-gray-100 rounded cursor-pointer">Northside</div>
+                              <div class="py-1 px-2 hover:bg-gray-100 rounded cursor-pointer">Westpark</div>
+                              <div class="py-1 px-2 hover:bg-gray-100 rounded cursor-pointer">Riverfront</div>
+                              <div class="py-1 px-2 hover:bg-gray-100 rounded cursor-pointer">East End</div>
+                            </div>
+                          </details>
+                          <details class="relative">
+                            <summary
+                              class="flex items-center px-3 py-2 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50">
+                              <span class="material-symbols-outlined mr-1 text-gray-500">pending</span> Status <span
+                                class="material-symbols-outlined ml-1 text-gray-500 text-sm">arrow_drop_down</span> </summary>
+                            <div class="absolute mt-1 bg-white shadow-md rounded-lg p-2 z-10 w-40">
+                              <div class="py-1 px-2 hover:bg-gray-100 rounded cursor-pointer">Open</div>
+                              <div class="py-1 px-2 hover:bg-gray-100 rounded cursor-pointer">In Progress</div>
+                              <div class="py-1 px-2 hover:bg-gray-100 rounded cursor-pointer">Under Review</div>
+                              <div class="py-1 px-2 hover:bg-gray-100 rounded cursor-pointer">Resolved</div>
+                              <div class="py-1 px-2 hover:bg-gray-100 rounded cursor-pointer">Closed</div>
+                            </div>
+                          </details> <button
+                            class="ml-auto px-3 py-2 text-primary-600 hover:bg-primary-50 rounded-lg transition-colors flex items-center">
+                            <span class="material-symbols-outlined mr-1">refresh</span> Reset Filters </button>
+                        </div>
+                      </div>
+                      <div class="bg-white rounded-lg shadow-sm overflow-hidden mb-8">
+                        <div class="overflow-x-auto">
+                          <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                              <tr>
+                                <th scope="col"
+                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                                <th scope="col"
+                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Issue</th>
+                                <th scope="col"
+                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location</th>
+                                <th scope="col"
+                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
+                                <th scope="col"
+                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                <th scope="col"
+                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Reported</th>
+                                <th scope="col"
+                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Priority</th>
+                                <th scope="col"
+                                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                              </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                              <tr class="hover:bg-gray-50 transition-colors">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">#1283</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                  <div class="flex items-center"> <img
+                                      src="https://images.unsplash.com/photo-1560782202-154b39d57ef2?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3w3MzkyNDZ8MHwxfHNlYXJjaHwxfHxwb3Rob2xlfGVufDB8fHx8MTc1NzU2MjQ3OHww&amp;ixlib=rb-4.1.0&amp;q=80&amp;w=1080"
+                                      alt="Pothole" class="h-10 w-10 rounded-md object-cover mr-3"
+                                      keywords="pothole, road damage, street repair" />
+                                    <div>
+                                      <div class="font-medium">Large Pothole</div>
+                                      <div class="text-gray-500 text-xs">4 upvotes</div>
+                                    </div>
+                                  </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Main St &amp; 5th Ave</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Road Maintenance</td>
+                                <td class="px-6 py-4 whitespace-nowrap"> <span
+                                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">In
+                                    Progress</span> </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Jun 12, 2023</td>
+                                <td class="px-6 py-4 whitespace-nowrap"> <span class="flex items-center"> <span
+                                      class="h-2.5 w-2.5 rounded-full bg-red-500 mr-2"></span> <span class="text-sm">High</span>
+                                  </span> </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                  <div class="flex space-x-2"> <button
+                                      class="text-blue-600 hover:text-blue-800 p-1 rounded-full hover:bg-blue-100 transition-colors">
+                                      <span class="material-symbols-outlined text-sm">visibility</span> </button> <button
+                                      class="text-green-600 hover:text-green-800 p-1 rounded-full hover:bg-green-100 transition-colors">
+                                      <span class="material-symbols-outlined text-sm">edit</span> </button> <button
+                                      class="text-primary-600 hover:text-primary-800 p-1 rounded-full hover:bg-primary-100 transition-colors">
+                                      <span class="material-symbols-outlined text-sm">comment</span> </button> </div>
+                                </td>
+                              </tr>
+                              <tr class="hover:bg-gray-50 transition-colors">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">#1282</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                  <div class="flex items-center"> <img
+                                      src="https://images.unsplash.com/photo-1543518360-68b9612a7c8c?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3w3MzkyNDZ8MHwxfHNlYXJjaHwxfHxzdHJlZXQlMjBsaWdodHxlbnwwfHx8fDE3NTc1NjI0Nzl8MA&amp;ixlib=rb-4.1.0&amp;q=80&amp;w=1080"
+                                      alt="Broken street light" class="h-10 w-10 rounded-md object-cover mr-3"
+                                      keywords="street light, broken lamp, night safety" />
+                                    <div>
+                                      <div class="font-medium">Broken Street Light</div>
+                                      <div class="text-gray-500 text-xs">8 upvotes</div>
+                                    </div>
+                                  </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Oak Avenue</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Street Lighting</td>
+                                <td class="px-6 py-4 whitespace-nowrap"> <span
+                                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Resolved</span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Jun 10, 2023</td>
+                                <td class="px-6 py-4 whitespace-nowrap"> <span class="flex items-center"> <span
+                                      class="h-2.5 w-2.5 rounded-full bg-yellow-500 mr-2"></span> <span class="text-sm">Medium</span>
+                                  </span> </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                  <div class="flex space-x-2"> <button
+                                      class="text-blue-600 hover:text-blue-800 p-1 rounded-full hover:bg-blue-100 transition-colors">
+                                      <span class="material-symbols-outlined text-sm">visibility</span> </button> <button
+                                      class="text-green-600 hover:text-green-800 p-1 rounded-full hover:bg-green-100 transition-colors">
+                                      <span class="material-symbols-outlined text-sm">edit</span> </button> <button
+                                      class="text-primary-600 hover:text-primary-800 p-1 rounded-full hover:bg-primary-100 transition-colors">
+                                      <span class="material-symbols-outlined text-sm">comment</span> </button> </div>
+                                </td>
+                              </tr>
+                              <tr class="hover:bg-gray-50 transition-colors">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">#1281</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                  <div class="flex items-center"> <img
+                                      src="https://images.unsplash.com/photo-1487452066049-a710f7296400?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3w3MzkyNDZ8MHwxfHNlYXJjaHwxfHxncmFmZml0aXxlbnwwfHx8fDE3NTc1NjI0ODF8MA&amp;ixlib=rb-4.1.0&amp;q=80&amp;w=1080"
+                                      alt="Graffiti on wall" class="h-10 w-10 rounded-md object-cover mr-3"
+                                      keywords="graffiti, vandalism, wall, public property" />
+                                    <div>
+                                      <div class="font-medium">Graffiti on Public Building</div>
+                                      <div class="text-gray-500 text-xs">2 upvotes</div>
+                                    </div>
+                                  </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Community Center</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Public Property</td>
+                                <td class="px-6 py-4 whitespace-nowrap"> <span
+                                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">Under
+                                    Review</span> </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Jun 9, 2023</td>
+                                <td class="px-6 py-4 whitespace-nowrap"> <span class="flex items-center"> <span
+                                      class="h-2.5 w-2.5 rounded-full bg-green-500 mr-2"></span> <span class="text-sm">Low</span>
+                                  </span> </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                  <div class="flex space-x-2"> <button
+                                      class="text-blue-600 hover:text-blue-800 p-1 rounded-full hover:bg-blue-100 transition-colors">
+                                      <span class="material-symbols-outlined text-sm">visibility</span> </button> <button
+                                      class="text-green-600 hover:text-green-800 p-1 rounded-full hover:bg-green-100 transition-colors">
+                                      <span class="material-symbols-outlined text-sm">edit</span> </button> <button
+                                      class="text-primary-600 hover:text-primary-800 p-1 rounded-full hover:bg-primary-100 transition-colors">
+                                      <span class="material-symbols-outlined text-sm">comment</span> </button> </div>
+                                </td>
+                              </tr>
+                              <tr class="hover:bg-gray-50 transition-colors">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">#1280</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                  <div class="flex items-center"> <img
+                                      src="https://images.unsplash.com/photo-1605600659873-d808a13e4d2a?ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&amp;auto=format&amp;fit=crop&amp;w=100&amp;q=80"
+                                      alt="Overflowing trash bin" class="h-10 w-10 rounded-md object-cover mr-3"
+                                      keywords="trash, garbage, waste, overflow, bin" />
+                                    <div>
+                                      <div class="font-medium">Overflowing Trash Bins</div>
+                                      <div class="text-gray-500 text-xs">12 upvotes</div>
+                                    </div>
+                                  </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Riverfront Park</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Waste Management</td>
+                                <td class="px-6 py-4 whitespace-nowrap"> <span
+                                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">Open</span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Jun 8, 2023</td>
+                                <td class="px-6 py-4 whitespace-nowrap"> <span class="flex items-center"> <span
+                                      class="h-2.5 w-2.5 rounded-full bg-red-500 mr-2"></span> <span class="text-sm">High</span>
+                                  </span> </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                  <div class="flex space-x-2"> <button
+                                      class="text-blue-600 hover:text-blue-800 p-1 rounded-full hover:bg-blue-100 transition-colors">
+                                      <span class="material-symbols-outlined text-sm">visibility</span> </button> <button
+                                      class="text-green-600 hover:text-green-800 p-1 rounded-full hover:bg-green-100 transition-colors">
+                                      <span class="material-symbols-outlined text-sm">edit</span> </button> <button
+                                      class="text-primary-600 hover:text-primary-800 p-1 rounded-full hover:bg-primary-100 transition-colors">
+                                      <span class="material-symbols-outlined text-sm">comment</span> </button> </div>
+                                </td>
+                              </tr>
+                              <tr class="hover:bg-gray-50 transition-colors">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">#1279</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                  <div class="flex items-center"> <img
+                                      src="https://images.unsplash.com/photo-1575783970733-1aaedde1db74?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3w3MzkyNDZ8MHwxfHNlYXJjaHwxfHxwbGF5Z3JvdW5kfGVufDB8fHx8MTc1NzU2MjQ4NHww&amp;ixlib=rb-4.1.0&amp;q=80&amp;w=1080"
+                                      alt="Broken playground equipment" class="h-10 w-10 rounded-md object-cover mr-3"
+                                      keywords="playground, broken, children, safety, park" />
+                                    <div>
+                                      <div class="font-medium">Damaged Playground Equipment</div>
+                                      <div class="text-gray-500 text-xs">7 upvotes</div>
+                                    </div>
+                                  </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Central Park</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Parks &amp; Recreation</td>
+                                <td class="px-6 py-4 whitespace-nowrap"> <span
+                                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">In
+                                    Progress</span> </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Jun 7, 2023</td>
+                                <td class="px-6 py-4 whitespace-nowrap"> <span class="flex items-center"> <span
+                                      class="h-2.5 w-2.5 rounded-full bg-red-500 mr-2"></span> <span class="text-sm">High</span>
+                                  </span> </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                  <div class="flex space-x-2"> <button
+                                      class="text-blue-600 hover:text-blue-800 p-1 rounded-full hover:bg-blue-100 transition-colors">
+                                      <span class="material-symbols-outlined text-sm">visibility</span> </button> <button
+                                      class="text-green-600 hover:text-green-800 p-1 rounded-full hover:bg-green-100 transition-colors">
+                                      <span class="material-symbols-outlined text-sm">edit</span> </button> <button
+                                      class="text-primary-600 hover:text-primary-800 p-1 rounded-full hover:bg-primary-100 transition-colors">
+                                      <span class="material-symbols-outlined text-sm">comment</span> </button> </div>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                        <div class="px-6 py-4 flex items-center justify-between border-t border-gray-200">
+                          <div class="flex-1 flex justify-between sm:hidden"> <button
+                              class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                              Previous </button> <button
+                              class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                              Next </button> </div>
+                          <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                            <div>
+                              <p class="text-sm text-gray-700"> Showing <span class="font-medium">1</span> to <span
+                                  class="font-medium">5</span> of <span class="font-medium">247</span> results </p>
+                            </div>
+                            <div>
+                              <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination"> <button
+                                  class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                  <span class="material-symbols-outlined text-sm">chevron_left</span> </button> <button
+                                  class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
+                                  1 </button> </nav>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                </div>
+
+                <!-- Resolutions View -->
+                <div id="resolutions-view" class="view hidden">
+                    <div class="bg-white rounded-xl p-6 shadow-sm">
+                        <h2 class="font-bold text-xl mb-4">Resolutions</h2>
+                        <p class="text-gray-600">This section will show a history of all resolved issues, including before and after photos, resolution details, and feedback from the community. A great place to celebrate our wins!</p>
+                        <div class="mt-4 flex flex-col space-y-4">
+                            <!-- Placeholder for resolved issues history -->
+                            <div class="p-4 bg-gray-100 rounded-lg flex items-center">
+                                <span class="material-symbols-outlined text-green-500 mr-3">check_circle</span>
+                                <div>
+                                    <p class="font-medium">Pothole on Main Street</p>
+                                    <p class="text-sm text-gray-500">Resolved on October 25, 2023</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Community View -->
+                <div id="community-view" class="view hidden">
+                    <div class="bg-white rounded-xl p-6 shadow-sm">
+                        <h2 class="font-bold text-xl mb-4">Community Forum</h2>
+                        <p class="text-gray-600">This section will feature a community board where users can discuss issues, share ideas, and provide feedback on the resolution process. This fosters a collaborative environment.</p>
+                        <div class="mt-4 flex flex-col space-y-4">
+                            <!-- Placeholder for community posts -->
+                            <div class="p-4 bg-gray-100 rounded-lg">
+                                <p class="font-medium text-blue-800">John D.</p>
+                                <p class="text-gray-700 mt-1">"Thank you for fixing the water leak! Great work!"</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Other views (Analytics, Settings) would go here, currently hidden placeholders -->
+            </main>
+        </div>
+    </div>
+
+    <!-- Issue Details Modal -->
+    <div id="issue-modal" class="modal fixed inset-0 bg-gray-600 bg-opacity-50 z-50 flex items-center justify-center hidden">
+        <div class="modal-content bg-white p-6 rounded-lg shadow-xl w-11/12 md:max-w-xl mx-auto">
+            <div class="flex justify-between items-center mb-4">
+                <h2 id="modal-title" class="text-xl font-bold">Issue Details</h2>
+                <button id="close-modal-btn" class="text-gray-500 hover:text-gray-800 transition-colors">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+            <form id="issue-form">
+                <input type="hidden" id="issue-id">
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Title</label>
+                    <input type="text" id="form-title" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" readonly>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Description</label>
+                    <textarea id="form-description" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" rows="3" readonly></textarea>
+                </div>
+                <div class="mb-4">
+                    <label for="form-status" class="block text-gray-700 text-sm font-bold mb-2">Status</label>
+                    <select id="form-status" class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                        <option value="Reported">Reported</option>
+                        <option value="In Progress">In Progress</option>
+                        <option value="Resolved">Resolved</option>
+                        <option value="Rejected">Rejected</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label for="form-priority" class="block text-gray-700 text-sm font-bold mb-2">Priority</label>
+                    <select id="form-priority" class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                        <option value="Low">Low</option>
+                        <option value="Medium">Medium</option>
+                        <option value="High">High</option>
+                        <option value="Urgent">Urgent</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label for="form-assigned" class="block text-gray-700 text-sm font-bold mb-2">Assign to Worker</label>
+                    <select id="form-assigned" class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                        <option value="Unassigned">Unassigned</option>
+                        <option value="Worker A">Worker A</option>
+                        <option value="Worker B">Worker B</option>
+                        <option value="Worker C">Worker C</option>
+                    </select>
+                </div>
+                <div class="flex justify-end mt-6">
+                    <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline">
+                        Update Issue
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Report New Issue Modal -->
+    <div id="report-modal" class="modal fixed inset-0 bg-gray-600 bg-opacity-50 z-50 flex items-center justify-center hidden">
+        <div class="modal-content bg-white p-6 rounded-lg shadow-xl w-11/12 md:max-w-xl mx-auto">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold">Report New Issue</h2>
+                <button id="close-report-modal-btn" class="text-gray-500 hover:text-gray-800 transition-colors">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+            <form id="new-issue-form">
+                <div class="mb-4">
+                    <label for="new-title" class="block text-gray-700 text-sm font-bold mb-2">Title</label>
+                    <input type="text" id="new-title" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                </div>
+                <div class="mb-4">
+                    <label for="new-description" class="block text-gray-700 text-sm font-bold mb-2">Description</label>
+                    <textarea id="new-description" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" rows="3" required></textarea>
+                </div>
+                <div class="mb-4">
+                    <label for="new-category" class="block text-gray-700 text-sm font-bold mb-2">Category</label>
+                    <select id="new-category" class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                        <option value="">Select Category</option>
+                        <option value="Pothole">Pothole</option>
+                        <option value="Water Leak">Water Leak</option>
+                        <option value="Street Light">Street Light</option>
+                        <option value="Garbage">Garbage</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label for="new-location" class="block text-gray-700 text-sm font-bold mb-2">Location</label>
+                    <input type="text" id="new-location" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                </div>
+                <div class="flex justify-end mt-6">
+                    <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline">
+                        Submit Report
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmation-modal" class="modal fixed inset-0 bg-gray-600 bg-opacity-50 z-50 flex items-center justify-center hidden">
+        <div class="modal-content bg-white p-6 rounded-lg shadow-xl w-11/12 md:max-w-sm mx-auto">
+            <h3 id="confirm-message" class="text-lg font-bold mb-4">Are you sure?</h3>
+            <div class="flex justify-end space-x-4">
+                <button id="cancel-confirm-btn" class="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300">Cancel</button>
+                <button id="confirm-action-btn" class="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        // Firebase imports
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, onSnapshot, doc, updateDoc, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+
+        // Global variables for Firebase configuration
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+        // --- Sample Hardcoded Data for Demo Purposes ---
+        const sampleIssues = [
+            { id: 'sample1', title: 'Pothole on Main Street', description: 'Large pothole near the intersection of Main and Oak.', category: 'Pothole', status: 'In Progress', priority: 'High', location: 'Main Street, Block 4', assignedTo: 'Worker A', reportedAt: { seconds: 1672531200 } },
+            { id: 'sample2', title: 'Water Main Leak', description: 'Water is pooling on the sidewalk. Looks like a broken pipe.', category: 'Water Leak', status: 'Reported', priority: 'Urgent', location: '123 Elm Street', assignedTo: 'Unassigned', reportedAt: { seconds: 1672617600 } },
+            { id: 'sample3', title: 'Street Light Out', description: 'Street light is blinking and not working properly.', category: 'Street Light', status: 'Resolved', priority: 'Low', location: '789 Pine Avenue', assignedTo: 'Worker C', reportedAt: { seconds: 1672704000 } },
+            { id: 'sample4', title: 'Overflowing Trash Cans', description: 'Public trash cans are overflowing with garbage and debris.', category: 'Garbage', status: 'Reported', priority: 'Medium', location: 'Central Park Entrance', assignedTo: 'Unassigned', reportedAt: { seconds: 1672790400 } },
+            { id: 'sample5', title: 'Graffiti on Building', description: 'Graffiti spray-painted on the side of the public library.', category: 'Other', status: 'Reported', priority: 'Low', location: '456 Library Road', assignedTo: 'Unassigned', reportedAt: { seconds: 1672876800 } }
+        ];
+
+        // --- Application State and Elements ---
+        let db;
+        let auth;
+        let userId;
+        let allIssues = [];
+        let currentSortDirection = '';
+
+        const issueModal = document.getElementById('issue-modal');
+        const reportModal = document.getElementById('report-modal');
+        const issueForm = document.getElementById('issue-form');
+        const newIssueForm = document.getElementById('new-issue-form');
+        const issuesListBody = document.getElementById('issues-list');
+        const totalIssuesCount = document.getElementById('total-issues');
+        const resolvedIssuesCount = document.getElementById('resolved-issues');
+        const inProgressIssuesCount = document.getElementById('in-progress-issues');
+        const categoryFilter = document.getElementById('category-filter');
+        const prioritySort = document.getElementById('priority-sort');
+        const issueContent = document.getElementById('issue-button');
+
+        const issueTrendsCanvas = document.getElementById('issue-trends-chart').getContext('2d');
+        const issueCategoriesCanvas = document.getElementById('issue-categories-chart').getContext('2d');
+        let issueTrendsChart;
+        let issueCategoriesChart;
+
+        // Mapping for priority to a numeric value for sorting
+        const priorityMap = {
+            'Urgent': 4,
+            'High': 3,
+            'Medium': 2,
+            'Low': 1,
+            'Unassigned': 0
+        };
+
+        issueContent.addEventListener('click', ()=>{
+
+        })
+
+        // --- Firebase Initialization and Auth ---
+        function initFirebase() {
+            try {
+                const app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                auth = getAuth(app);
+                setLogLevel('debug');
+
+                onAuthStateChanged(auth, async (user) => {
+                    if (user) {
+                        userId = user.uid;
+                        console.log('User signed in with ID:', userId);
+                        attachRealtimeListener();
+                    } else {
+                        await signInAnonymously(auth);
+                    }
+                });
+
+                if (initialAuthToken) {
+                    signInWithCustomToken(auth, initialAuthToken).catch((error) => {
+                        console.error('Firebase Auth Error:', error);
+                    });
+                } else {
+                    signInAnonymously(auth).catch((error) => {
+                        console.error('Firebase Auth Error:', error);
+                    });
+                }
+            } catch (error) {
+                console.error('Failed to initialize Firebase:', error);
+            }
+        }
+
+        // --- Firestore Real-time Listener ---
+        function attachRealtimeListener() {
+            const issuesCol = collection(db, `/artifacts/${appId}/public/data/issues`);
+            onSnapshot(issuesCol, (snapshot) => {
+                const firestoreIssues = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                // Combine sample issues and live issues, prioritizing live issues by ID
+                const combinedIssues = [...sampleIssues, ...firestoreIssues];
+                const uniqueIssues = Array.from(new Set(combinedIssues.map(a => a.id)))
+                    .map(id => {
+                        return combinedIssues.find(a => a.id === id)
+                    });
+
+                allIssues = uniqueIssues;
+                applyFiltersAndSort();
+                updateDashboardStats();
+                updateCharts();
+                populateCategoryFilter();
+            }, (error) => {
+                console.error("Failed to fetch issues:", error);
+                issuesListBody.innerHTML = `<tr><td colspan="6" class="px-6 py-4 text-center text-red-500">Error loading issues. Please check the console for details.</td></tr>`;
+            });
+        }
+
+        // --- UI Rendering and Data Processing ---
+        function renderIssues(issues) {
+            issuesListBody.innerHTML = '';
+            if (issues.length === 0) {
+                issuesListBody.innerHTML = `<tr><td colspan="6" class="px-6 py-4 text-center text-gray-500">No issues found.</td></tr>`;
+                return;
+            }
+
+            issues.forEach(issue => {
+                const row = document.createElement('tr');
+                row.className = 'hover:bg-gray-50 cursor-pointer transition-colors rounded-lg';
+                row.onclick = () => openIssueModal(issue);
+
+                const statusClass = getStatusClass(issue.status);
+                const priorityClass = getPriorityClass(issue.priority);
+
+                row.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${issue.title}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${issue.category}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${statusClass}">${issue.status}</span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${priorityClass}">${issue.priority}</span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${issue.location}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${issue.assignedTo || 'Unassigned'}</td>
+                `;
+                issuesListBody.appendChild(row);
+            });
+        }
+        
+        function getStatusClass(status) {
+            switch (status) {
+                case 'Resolved': return 'bg-green-100 text-green-800';
+                case 'In Progress': return 'bg-yellow-100 text-yellow-800';
+                case 'Reported': return 'bg-blue-100 text-blue-800';
+                case 'Rejected': return 'bg-red-100 text-red-800';
+                default: return 'bg-gray-100 text-gray-800';
+            }
+        }
+        
+        function getPriorityClass(priority) {
+             switch (priority) {
+                case 'Urgent': return 'bg-red-100 text-red-800';
+                case 'High': return 'bg-orange-100 text-orange-800';
+                case 'Medium': return 'bg-yellow-100 text-yellow-800';
+                case 'Low': return 'bg-green-100 text-green-800';
+                default: return 'bg-gray-100 text-gray-800';
+            }
+        }
+
+        function updateDashboardStats() {
+            const resolvedCount = allIssues.filter(issue => issue.status === 'Resolved').length;
+            const inProgressCount = allIssues.filter(issue => issue.status === 'In Progress').length;
+            const totalCount = allIssues.length;
+
+            totalIssuesCount.textContent = totalCount;
+            resolvedIssuesCount.textContent = resolvedCount;
+            inProgressIssuesCount.textContent = inProgressCount;
+        }
+
+        function populateCategoryFilter() {
+            const categories = [...new Set(allIssues.map(issue => issue.category))];
+            categoryFilter.innerHTML = '<option value="">All Categories</option>';
+            categories.forEach(category => {
+                const option = document.createElement('option');
+                option.value = category;
+                option.textContent = category;
+                categoryFilter.appendChild(option);
+            });
+        }
+
+        function applyFiltersAndSort() {
+            const selectedCategory = categoryFilter.value;
+            let issuesToRender = [...allIssues];
+
+            // Filter by category
+            if (selectedCategory) {
+                issuesToRender = issuesToRender.filter(issue => issue.category === selectedCategory);
+            }
+
+            // Sort by priority
+            if (currentSortDirection === 'asc') {
+                issuesToRender.sort((a, b) => (priorityMap[a.priority] || 0) - (priorityMap[b.priority] || 0));
+            } else if (currentSortDirection === 'desc') {
+                issuesToRender.sort((a, b) => (priorityMap[b.priority] || 0) - (priorityMap[a.priority] || 0));
+            }
+
+            renderIssues(issuesToRender);
+        }
+
+        // --- Chart Rendering ---
+        function updateCharts() {
+            if (issueTrendsChart) issueTrendsChart.destroy();
+            if (issueCategoriesChart) issueCategoriesChart.destroy();
+
+            // Prepare data for Issue Trends Chart
+            const trendsData = {};
+            allIssues.forEach(issue => {
+                const timestamp = issue.reportedAt.seconds ? issue.reportedAt.seconds * 1000 : new Date().getTime();
+                const date = new Date(timestamp).toISOString().split('T')[0];
+                if (!trendsData[date]) trendsData[date] = 0;
+                trendsData[date]++;
+            });
+            const trendsLabels = Object.keys(trendsData).sort();
+            const trendsValues = trendsLabels.map(label => trendsData[label]);
+
+            issueTrendsChart = new Chart(issueTrendsCanvas, {
+                type: 'line',
+                data: {
+                    labels: trendsLabels,
+                    datasets: [{
+                        label: 'Issues Reported',
+                        data: trendsValues,
+                        borderColor: '#10B981',
+                        backgroundColor: 'rgba(16, 185, 129, 0.2)',
+                        tension: 0.3,
+                        fill: true,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { beginAtZero: true },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+
+            // Prepare data for Issue Categories Chart
+            const categoriesData = {};
+            allIssues.forEach(issue => {
+                const category = issue.category;
+                if (!categoriesData[category]) categoriesData[category] = 0;
+                categoriesData[category]++;
+            });
+            const categoriesLabels = Object.keys(categoriesData);
+            const categoriesValues = categoriesLabels.map(label => categoriesData[label]);
+
+            issueCategoriesChart = new Chart(issueCategoriesCanvas, {
+                type: 'doughnut',
+                data: {
+                    labels: categoriesLabels,
+                    datasets: [{
+                        label: 'Issues by Category',
+                        data: categoriesValues,
+                        backgroundColor: [
+                            '#10B981', '#F59E0B', '#3B82F6', '#EF4444', '#6B7280'
+                        ],
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+        }
+
+        // --- Modal and Form Handlers ---
+        function openIssueModal(issue) {
+            document.getElementById('issue-id').value = issue.id;
+            document.getElementById('form-title').value = issue.title;
+            document.getElementById('form-description').value = issue.description;
+            document.getElementById('form-status').value = issue.status;
+            document.getElementById('form-priority').value = issue.priority;
+            document.getElementById('form-assigned').value = issue.assignedTo || 'Unassigned';
+            issueModal.classList.remove('hidden');
+        }
+
+        function closeIssueModal() {
+            issueModal.classList.add('hidden');
+        }
+
+        function openReportModal() {
+            reportModal.classList.remove('hidden');
+        }
+
+        function closeReportModal() {
+            reportModal.classList.add('hidden');
+        }
+
+        async function handleIssueFormSubmit(event) {
+            event.preventDefault();
+            const issueId = document.getElementById('issue-id').value;
+            const newStatus = document.getElementById('form-status').value;
+            const newPriority = document.getElementById('form-priority').value;
+            const newAssignedTo = document.getElementById('form-assigned').value;
+
+            try {
+                // Check if the issue ID is from a sample issue
+                const isSampleIssue = sampleIssues.some(issue => issue.id === issueId);
+                
+                if (isSampleIssue) {
+                    console.log("Updating a sample issue. Update will not be saved to Firestore.");
+                    const updatedIssueIndex = allIssues.findIndex(issue => issue.id === issueId);
+                    if (updatedIssueIndex !== -1) {
+                        allIssues[updatedIssueIndex] = {
+                            ...allIssues[updatedIssueIndex],
+                            status: newStatus,
+                            priority: newPriority,
+                            assignedTo: newAssignedTo
+                        };
+                        applyFiltersAndSort();
+                        updateDashboardStats();
+                        updateCharts();
+                        closeIssueModal();
+                    }
+                } else {
+                    const issueRef = doc(db, `/artifacts/${appId}/public/data/issues`, issueId);
+                    await updateDoc(issueRef, {
+                        status: newStatus,
+                        priority: newPriority,
+                        assignedTo: newAssignedTo
+                    });
+                    closeIssueModal();
+                }
+            } catch (error) {
+                console.error('Error updating document:', error);
+            }
+        }
+        
+        async function handleNewIssueFormSubmit(event) {
+            event.preventDefault();
+            const newTitle = document.getElementById('new-title').value;
+            const newDescription = document.getElementById('new-description').value;
+            const newCategory = document.getElementById('new-category').value;
+            const newLocation = document.getElementById('new-location').value;
+            
+            try {
+                await addDoc(collection(db, `/artifacts/${appId}/public/data/issues`), {
+                    title: newTitle,
+                    description: newDescription,
+                    category: newCategory,
+                    location: newLocation,
+                    status: 'Reported',
+                    priority: 'Medium',
+                    assignedTo: 'Unassigned',
+                    reportedAt: new Date(),
+                    reportedBy: userId
+                });
+                closeReportModal();
+                newIssueForm.reset();
+            } catch (error) {
+                console.error('Error adding new document:', error);
+            }
+        }
+
+        // --- View Switching Logic ---
+        function showView(viewId) {
+            const views = document.querySelectorAll('.view');
+            views.forEach(view => {
+                view.classList.add('hidden');
+            });
+            document.getElementById(viewId).classList.remove('hidden');
+
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => {
+                item.classList.remove('bg-green-100', 'text-green-700');
+                item.classList.add('text-gray-600', 'hover:bg-gray-100');
+            });
+            const activeNav = document.querySelector(`.nav-item[data-view="${viewId}"]`);
+            if (activeNav) {
+                activeNav.classList.add('bg-green-100', 'text-green-700');
+                activeNav.classList.remove('text-gray-600', 'hover:bg-gray-100');
+            }
+        }
+
+        // --- Event Listeners ---
+        window.onload = () => {
+            initFirebase();
+            document.getElementById('close-modal-btn').onclick = closeIssueModal;
+            document.getElementById('report-issue-btn').onclick = openReportModal;
+            document.getElementById('close-report-modal-btn').onclick = closeReportModal;
+            issueForm.addEventListener('submit', handleIssueFormSubmit);
+            newIssueForm.addEventListener('submit', handleNewIssueFormSubmit);
+            
+            // Initial render with sample data
+            allIssues = sampleIssues;
+            applyFiltersAndSort();
+            updateDashboardStats();
+            updateCharts();
+            populateCategoryFilter();
+
+            categoryFilter.addEventListener('change', applyFiltersAndSort);
+            prioritySort.addEventListener('change', (e) => {
+                currentSortDirection = e.target.value;
+                applyFiltersAndSort();
+            });
+
+            // Attach event listeners for navigation
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    const viewId = item.getAttribute('data-view');
+                    showView(viewId);
+                });
+            });
+
+            showView('dashboard-view');
+        };
+    </script>
+</body>
+
+</html>
+ 
