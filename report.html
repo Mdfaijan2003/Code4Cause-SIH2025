@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CivicFix - Report an Issue</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50">
+    <div class="container mx-auto px-4 py-8 max-w-2xl">
+        <a href="index.html" class="inline-flex items-center text-gray-600 hover:text-gray-900 mb-6">
+            <span class="material-symbols-outlined">arrow_back</span>
+            Back to Dashboard
+        </a>
+        <div class="bg-white rounded-xl shadow-lg p-8">
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">Report a Civic Issue</h1>
+            <p class="text-gray-600 mb-6">Your report helps us identify and fix problems in the community.</p>
+
+            <form id="report-form" class="space-y-6">
+                <!-- User Info (pre-filled) -->
+                <div>
+                    <label for="user-name" class="block text-sm font-medium text-gray-700">Your Name</label>
+                    <input type="text" id="user-name"
+                        class="mt-1 block w-full bg-gray-100 px-3 py-2 border border-gray-300 rounded-md" readonly>
+                </div>
+                <div>
+                    <label for="user-email" class="block text-sm font-medium text-gray-700">Your Email</label>
+                    <input type="email" id="user-email"
+                        class="mt-1 block w-full bg-gray-100 px-3 py-2 border border-gray-300 rounded-md" readonly>
+                </div>
+
+                <!-- Issue Details -->
+                <div>
+                    <label for="issue-type" class="block text-sm font-medium text-gray-700">Type of Issue</label>
+                    <select id="issue-type" required
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#611BF8]">
+                        <option value="">-- Select an issue type --</option>
+                        <option>Pothole</option>
+                        <option>Broken Streetlight</option>
+                        <option>Overflowing Trash</option>
+                        <option>Graffiti</option>
+                        <option>Other</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
+                    <textarea id="description" rows="3" required
+                        class="mt-1 block w-full border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#611BF8]"
+                        placeholder="Describe the issue..."></textarea>
+                </div>
+
+                <!-- Location -->
+                <div>
+                    <label for="location" class="block text-sm font-medium text-gray-700">Location</label>
+                    <div class="flex gap-2 mt-1">
+                        <input type="text" id="location" required
+                            class="flex-grow w-full px-3 py-2 border border-gray-300 rounded-md"
+                            placeholder="Enter address or intersection">
+                        <button type="button" id="get-location-btn" class="p-2 bg-gray-200 hover:bg-gray-300 rounded-md"
+                            title="Get Current Location">
+                            <span class="material-symbols-outlined">my_location</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Media Capture -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Attach Media</label>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <label
+                            class="flex flex-col items-center justify-center p-4 border-2 border-dashed rounded-lg cursor-pointer hover:bg-gray-50">
+                            <span class="material-symbols-outlined text-4xl text-gray-400">photo_camera</span>
+                            <span class="mt-2 text-sm text-center">Click Photo</span>
+                            <input type="file" accept="image/*" capture="environment" class="hidden">
+                        </label>
+                        <label
+                            class="flex flex-col items-center justify-center p-4 border-2 border-dashed rounded-lg cursor-pointer hover:bg-gray-50">
+                            <span class="material-symbols-outlined text-4xl text-gray-400">videocam</span>
+                            <span class="mt-2 text-sm text-center">Record Video</span>
+                            <input type="file" accept="video/*" capture="environment" class="hidden">
+                        </label>
+                        <div class="flex flex-col items-center justify-center p-4 border-2 border-dashed rounded-lg">
+                            <button type="button" id="record-audio-btn" class="flex flex-col items-center">
+                                <span class="material-symbols-outlined text-4xl text-red-500" id="mic-icon">mic</span>
+                                <span class="mt-2 text-sm text-center" id="mic-label">Record Audio</span>
+                            </button>
+                            <audio id="audio-playback" controls class="hidden w-full mt-2"></audio>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pt-4">
+                    <button type="submit"
+                        class="w-full bg-[#611BF8] text-white font-bold py-3 px-4 rounded-lg hover:bg-opacity-90 transition-all flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined">send</span> Submit Report
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const user = JSON.parse(localStorage.getItem('civicFixUser'));
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // --- Pre-fill User Info ---
+            document.getElementById('user-name').value = user.name;
+            document.getElementById('user-email').value = user.email;
+
+            // --- Geolocation ---
+            const getLocationBtn = document.getElementById('get-location-btn');
+            const locationInput = document.getElementById('location');
+            getLocationBtn.addEventListener('click', () => {
+                if (navigator.geolocation) {
+                    locationInput.value = "Fetching location...";
+                    navigator.geolocation.getCurrentPosition(
+                        (position) => {
+                            locationInput.value = `Lat: ${position.coords.latitude.toFixed(5)}, Lon: ${position.coords.longitude.toFixed(5)}`;
+                        },
+                        () => { locationInput.value = "Unable to retrieve location."; }
+                    );
+                } else {
+                    locationInput.value = "Geolocation is not supported by this browser.";
+                }
+            });
+
+            // --- Audio Recording ---
+            const recordBtn = document.getElementById('record-audio-btn');
+            const micIcon = document.getElementById('mic-icon');
+            const micLabel = document.getElementById('mic-label');
+            const audioPlayback = document.getElementById('audio-playback');
+            let mediaRecorder;
+            let audioChunks = [];
+
+            recordBtn.addEventListener('click', async () => {
+                if (mediaRecorder && mediaRecorder.state === "recording") {
+                    mediaRecorder.stop();
+                    micIcon.classList.remove('animate-pulse');
+                    micIcon.textContent = 'mic';
+                    micLabel.textContent = 'Record Audio';
+                } else {
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    mediaRecorder = new MediaRecorder(stream);
+                    mediaRecorder.start();
+                    audioChunks = [];
+                    micIcon.classList.add('animate-pulse');
+                    micIcon.textContent = 'stop_circle';
+                    micLabel.textContent = 'Stop Recording';
+                    audioPlayback.classList.add('hidden');
+
+                    mediaRecorder.addEventListener("dataavailable", event => audioChunks.push(event.data));
+                    mediaRecorder.addEventListener("stop", () => {
+                        const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                        const audioUrl = URL.createObjectURL(audioBlob);
+                        audioPlayback.src = audioUrl;
+                        audioPlayback.classList.remove('hidden');
+                    });
+                }
+            });
+
+            // --- Form Submission ---
+            const reportForm = document.getElementById('report-form');
+            reportForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const trackingId = `CFX-${Date.now()}`;
+
+                const newReport = {
+                    id: trackingId,
+                    name: user.name,
+                    email: user.email,
+                    issueType: document.getElementById('issue-type').value,
+                    description: document.getElementById('description').value,
+                    location: document.getElementById('location').value,
+                    status: 'Pending',
+                    timestamp: new Date().toISOString()
+                };
+
+                const allReports = JSON.parse(localStorage.getItem('civicFixReports')) || [];
+                allReports.unshift(newReport); // Add new report to the beginning
+                localStorage.setItem('civicFixReports', JSON.stringify(allReports));
+
+                alert(`Report Submitted!\nYour Tracking ID is: ${trackingId}\nYou will now be redirected.`);
+                window.location.href = 'index.html';
+            });
+        });
+    </script>
+</body>
+
+</html>
