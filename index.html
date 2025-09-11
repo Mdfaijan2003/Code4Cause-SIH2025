@@ -2,492 +2,613 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CivicFix</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
-    @import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
-    @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined');
-    @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css');
-    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+
+    .modal-backdrop {
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .line-clamp-2 {
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      line-height: 1.2;
+    }
+
+    summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .animate-fade-in-up {
+      animation: fadeInUp 0.3s ease-out forwards;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Slider Styles */
+    .slide {
+      transition: opacity 1s ease-in-out;
+    }
+
+    .dot.active {
+      background-color: white;
+    }
   </style>
-  <link rel="stylesheet" href="output.css" />
 </head>
 
-<body>
-  <div id="main-container" class="bg-gray-100">
-    <div class="font-sans bg-slate-50 min-h-screen">
-      <header class="bg-[#611BF8] text-white shadow-lg">
-        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+<body class="bg-slate-50">
+  <div id="main-container">
+    <!-- Header Section -->
+    <header class="bg-white text-gray-800 shadow-lg sticky top-0 z-50">
+      <!-- Top Bar -->
+      <div class="bg-gray-100 border-b">
+        <div class="container mx-auto px-4 py-2 flex justify-between items-center">
+          <div class="flex items-center space-x-3">
+            <img
+              src="../public/governmentofindia.png"
+              alt="Govt of WB Emblem" class="h-12" />
+            <div>
+              <p class="font-semibold text-gray-800">Government of India</p>
+              <p class="text-sm text-gray-600">Urban Development & Municipal Affairs</p>
+            </div>
+          </div>
+          <p class="hidden sm:block text-sm text-gray-700 font-medium">Thursday, 11 September 2025</p>
+        </div>
+      </div>
+      <!-- Main Navigation -->
+      <div class="bg-[#611BF8] text-white">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
           <div class="flex items-center space-x-2">
             <span class="material-symbols-outlined text-3xl">location_city</span>
             <h1 class="text-2xl font-bold">CivicFix</h1>
           </div>
-          <div class="flex items-center space-x-4">
-            <button class="bg-indigo-500 bg-opacity-20 hover:bg-opacity-30 transition-all rounded-full p-2">
-              <span class="material-symbols-outlined">notifications</span>
-            </button>
+          <nav class="hidden md:flex items-center space-x-2 lg:space-x-4">
+            <a href="index.html"
+              class="text-sm lg:text-base bg-white/20 px-3 py-1 rounded-md transition-colors">Home</a>
+            <a href="my-reports.html"
+              class="text-sm lg:text-base hover:bg-white/20 px-3 py-1 rounded-md transition-colors">My Reports</a>
+            <a href="about.html"
+              class="text-sm lg:text-base hover:bg-white/20 px-3 py-1 rounded-md transition-colors">About</a>
+            <a href="contact.html"
+              class="text-sm lg:text-base hover:bg-white/20 px-3 py-1 rounded-md transition-colors">Contact</a>
+          </nav>
+          <div class="flex items-center space-x-2 md:space-x-4">
             <div
-              class="flex items-center space-x-2 cursor-pointer hover:bg-white hover:bg-opacity-10 transition-all px-3 py-1 rounded-full">
-              <div class="w-8 h-8 bg-[#611BF8] rounded-full flex items-center justify-center">
-                <span class="material-symbols-outlined">person</span>
-              </div>
-              <span class="hidden md:block">Code4cause</span>
+              class="flex items-center space-x-2 cursor-pointer hover:bg-white/20 transition-all px-3 py-1 rounded-full">
+              <div id="user-initial"
+                class="w-8 h-8 bg-white text-[#611BF8] rounded-full flex items-center justify-center font-bold text-sm">
+                G</div>
+              <span id="user-name" class="font-medium text-sm">Guest</span>
             </div>
+            <button id="mobile-menu-btn" class="md:hidden p-2 rounded-md hover:bg-white/20">
+              <span class="material-symbols-outlined text-3xl">menu</span>
+            </button>
           </div>
         </div>
-      </header>
-      <main class="container mx-auto px-4 py-8">
-        <section class="mb-12 relative rounded-xl overflow-hidden shadow-lg">
-          <div class="absolute inset-0 bg-gradient-to-r from-[#4607d0]/80 to-[#631bff]/60 z-10"></div>
-          <img src="https://images.unsplash.com/photo-1444723121867-7a241cacace9" alt="City view"
-            class="w-full h-80 object-cover" />
-          <div class="absolute inset-0 z-20 flex flex-col justify-center px-8 text-white">
-            <h2 class="text-4xl font-bold mb-4">Make Your City Better</h2>
-            <p class="text-xl mb-6 max-w-2xl">
-              Report civic issues in your neighborhood and track their resolution in real-time.
-            </p>
-            <button
-              class="bg-white text-[#611BF8] hover:bg-[#611BF8] hover:text-white transition-all w-48 py-3 rounded-full font-semibold flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
-              <span class="material-symbols-outlined">add_circle</span> <span>Report an Issue</span>
-            </button>
-          </div>
-        </section>
-        <section class="mb-12">
-          <div class="flex flex-col md:flex-row justify-between items-center mb-6">
-            <h2 class="text-2xl font-bold text-gray-800">Recent Reports</h2>
-            <div class="flex space-x-3 mt-4 md:mt-0">
-              <div class="relative">
-                <details class="group">
-                  <summary
-                    class="flex items-center space-x-2 bg-white border border-gray-300 rounded-lg px-4 py-2 cursor-pointer hover:bg-gray-50 transition-all">
-                    <span class="material-symbols-outlined">filter_alt</span>
-                    <span>Filter</span>
-                    <span
-                      class="material-symbols-outlined text-sm transition-transform group-open:rotate-180">expand_more</span>
-                  </summary>
-                  <div class="absolute mt-2 right-0 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-10">
-                    <div class="p-3">
-                      <div class="mb-2 font-medium">Issue Type</div>
-                      <div class="space-y-2">
-                        <label class="flex items-center space-x-2 cursor-pointer">
-                          <input type="checkbox" class="rounded text-primary-500" />
-                          <span>Potholes</span>
-                        </label>
-                        <label class="flex items-center space-x-2 cursor-pointer">
-                          <input type="checkbox" class="rounded text-primary-500" />
-                          <span>Streetlights</span>
-                        </label>
-                        <label class="flex items-center space-x-2 cursor-pointer">
-                          <input type="checkbox" class="rounded text-primary-500" />
-                          <span>Trash</span>
-                        </label>
-                        <label class="flex items-center space-x-2 cursor-pointer">
-                          <input type="checkbox" class="rounded text-primary-500" />
-                          <span>Graffiti</span>
-                        </label>
-                      </div>
-                      <div class="mt-4 mb-2 font-medium">Status</div>
-                      <div class="space-y-2">
-                        <label class="flex items-center space-x-2 cursor-pointer">
-                          <input type="checkbox" class="rounded text-primary-500" />
-                          <span>Pending</span>
-                        </label>
-                        <label class="flex items-center space-x-2 cursor-pointer">
-                          <input type="checkbox" class="rounded text-primary-500" />
-                          <span>In Progress</span>
-                        </label>
-                        <label class="flex items-center space-x-2 cursor-pointer">
-                          <input type="checkbox" class="rounded text-primary-500" />
-                          <span>Resolved</span>
-                        </label>
-                      </div>
-                    </div>
-                  </div>
-                </details>
-              </div>
-              <div class="relative">
-                <details class="group">
-                  <summary
-                    class="flex items-center space-x-2 bg-white border border-gray-300 rounded-lg px-4 py-2 cursor-pointer hover:bg-gray-50 transition-all">
-                    <span class="material-symbols-outlined">sort</span> <span>Sort</span>
-                    <span
-                      class="material-symbols-outlined text-sm transition-transform group-open:rotate-180">expand_more</span>
-                  </summary>
-                  <div class="absolute mt-2 right-0 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-10">
-                    <div class="py-1">
-                      <button class="w-full text-left px-4 py-2 hover:bg-gray-100 transition-all">
-                        Newest First
-                      </button>
-                      <button class="w-full text-left px-4 py-2 hover:bg-gray-100 transition-all">
-                        Oldest First
-                      </button>
-                      <button class="w-full text-left px-4 py-2 hover:bg-gray-100 transition-all">
-                        Most Upvoted
-                      </button>
-                      <button class="w-full text-left px-4 py-2 hover:bg-gray-100 transition-all">
-                        Priority (High to Low)
-                      </button>
-                    </div>
-                  </div>
-                </details>
-              </div>
-            </div>
-          </div>
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div
-              class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-all transform hover:-translate-y-1">
-              <div class="relative h-40">
-                <img src="https://images.unsplash.com/photo-1515162816999-a0c47dc192f7" alt="Pothole"
-                  class="w-full h-full object-cover" />
-                <div class="absolute top-3 right-3 bg-yellow-500 text-white rounded-full px-3 py-1 text-sm font-medium">
-                  In Progress
-                </div>
-              </div>
-              <div class="p-5">
-                <div class="flex justify-between items-center mb-3">
-                  <div class="flex items-center space-x-2">
-                    <span class="material-symbols-outlined text-gray-600">construction</span>
-                    <h3 class="font-semibold">Large Pothole</h3>
-                  </div>
-                  <span class="text-sm text-gray-500">2 days ago</span>
-                </div>
-                <p class="text-gray-600 mb-4 line-clamp-2">
-                  Deep pothole causing traffic hazards at the intersection. Several vehicles have been damaged.
-                </p>
-                <div class="flex items-center justify-between">
-                  <div class="flex items-center space-x-1 text-gray-600 text-sm">
-                    <span class="material-symbols-outlined text-sm">location_on</span>
-                    <span>Main St &amp; 5th Ave</span>
-                  </div>
-                  <div class="flex items-center space-x-2">
-                    <button class="flex items-center space-x-1 text-gray-500 hover:text-gray-700">
-                      <span class="material-symbols-outlined text-sm">thumb_up</span>
-                      <span>24</span>
-                    </button>
-                    <button class="flex items-center space-x-1 text-gray-500 hover:text-gray-700">
-                      <span class="material-symbols-outlined text-sm">comment</span>
-                      <span>8</span>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
-              class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-all transform hover:-translate-y-1">
-              <div class="relative h-40">
-                <img src="https://images.unsplash.com/photo-1566041510639-8d95a2490bfb" alt="Broken streetlight"
-                  class="w-full h-full object-cover" />
-                <div class="absolute top-3 right-3 bg-red-500 text-white rounded-full px-3 py-1 text-sm font-medium">
-                  Pending
-                </div>
-              </div>
-              <div class="p-5">
-                <div class="flex justify-between items-center mb-3">
-                  <div class="flex items-center space-x-2">
-                    <span class="material-symbols-outlined text-gray-600">lightbulb</span>
-                    <h3 class="font-semibold">Broken Streetlight</h3>
-                  </div>
-                  <span class="text-sm text-gray-500">5 hours ago</span>
-                </div>
-                <p class="text-gray-600 mb-4 line-clamp-2">
-                  Streetlight has been out for over a week, creating safety concerns for pedestrians at night.
-                </p>
-                <div class="flex items-center justify-between">
-                  <div class="flex items-center space-x-1 text-gray-600 text-sm">
-                    <span class="material-symbols-outlined text-sm">location_on</span>
-                    <span>Oak Lane</span>
-                  </div>
-                  <div class="flex items-center space-x-2">
-                    <button class="flex items-center space-x-1 text-gray-500 hover:text-gray-700">
-                      <span class="material-symbols-outlined text-sm">thumb_up</span>
-                      <span>16</span>
-                    </button>
-                    <button class="flex items-center space-x-1 text-gray-500 hover:text-gray-700">
-                      <span class="material-symbols-outlined text-sm">comment</span>
-                      <span>4</span>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
-              class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-all transform hover:-translate-y-1">
-              <div class="relative h-40">
-                <img src="https://images.unsplash.com/photo-1530587191325-3db32d826c18" alt="Overflowing trash bin"
-                  class="w-full h-full object-cover" />
-                <div class="absolute top-3 right-3 bg-green-500 text-white rounded-full px-3 py-1 text-sm font-medium">
-                  Resolved
-                </div>
-              </div>
-              <div class="p-5">
-                <div class="flex justify-between items-center mb-3">
-                  <div class="flex items-center space-x-2">
-                    <span class="material-symbols-outlined text-gray-600">delete</span>
-                    <h3 class="font-semibold">Overflowing Trash Bin</h3>
-                  </div>
-                  <span class="text-sm text-gray-500">1 week ago</span>
-                </div>
-                <p class="text-gray-600 mb-4 line-clamp-2">
-                  Public trash bin is constantly overflowing. Request for more frequent collection or additional bins.
-                </p>
-                <div class="flex items-center justify-between">
-                  <div class="flex items-center space-x-1 text-gray-600 text-sm">
-                    <span class="material-symbols-outlined text-sm">location_on</span>
-                    <span>Central Park West</span>
-                  </div>
-                  <div class="flex items-center space-x-2">
-                    <button class="flex items-center space-x-1 text-gray-500 hover:text-gray-700">
-                      <span class="material-symbols-outlined text-sm">thumb_up</span>
-                      <span>32</span>
-                    </button>
-                    <button class="flex items-center space-x-1 text-gray-500 hover:text-gray-700">
-                      <span class="material-symbols-outlined text-sm">comment</span>
-                      <span>12</span>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="mt-6 text-center">
-            <button
-              class="bg-white border border-[#611BF8] rounded-full px-6 py-2 text-[#611BF8] text-sm font-medium flex items-center justify-center mx-auto space-x-1 transition-all hover:shadow-lg hover:-translate-y-1 hover:bg-[#611BF8] hover:text-white">
-              <span>View All Reports</span>
-              <span class="material-symbols-outlined">chevron_right</span>
-            </button>
-          </div>
-        </section>
-        <section class="mb-12">
-          <h2 class="text-2xl font-bold text-gray-800 mb-6">Issue Map</h2>
-          <div class="bg-white rounded-xl shadow-lg overflow-hidden h-[400px] relative">
-            <img src="https://images.unsplash.com/photo-1569336415962-a4bd9f69c07a" alt="City map with issue markers"
-              class="w-full h-full object-cover" />
-            <div class="absolute inset-0 flex items-center justify-center">
-              <div class="bg-white/90 rounded-lg p-8 max-w-md text-center">
-                <span class="material-symbols-outlined text-5xl text-primary-500 mb-3">map</span>
-                <h3 class="text-xl font-semibold mb-2">Interactive Issue Map</h3>
-                <p class="text-gray-600 mb-4">
-                  View all reported issues on an interactive map. Filter by issue type, status, or date reported.
-                </p>
-                <button class="bg-[#611BF8] text-white hover:bg-[#611BF8] px-6 py-2 rounded-lg transition-all">
-                  Open Full Map
-                </button>
-              </div>
-            </div>
-          </div>
-        </section>
-        <section class="mb-12">
-          <h2 class="text-2xl font-bold text-gray-800 mb-6">Impact Statistics</h2>
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-all">
-              <div class="flex items-center justify-between mb-4">
-                <h3 class="text-gray-600 font-medium">Total Reports</h3>
-                <span class="material-symbols-outlined text-3xl text-primary-500">assignment</span>
-              </div>
-              <p class="text-3xl font-bold">1,248</p>
-              <p class="text-green-600 flex items-center mt-2 text-sm">
-                <span class="material-symbols-outlined text-sm">trending_up</span>
-                <span>12% increase</span>
-              </p>
-            </div>
-            <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-all">
-              <div class="flex items-center justify-between mb-4">
-                <h3 class="text-gray-600 font-medium">Resolved Issues</h3>
-                <span class="material-symbols-outlined text-3xl text-green-500">task_alt</span>
-              </div>
-              <p class="text-3xl font-bold">876</p>
-              <p class="text-gray-500 text-sm mt-2">70% resolution rate</p>
-            </div>
-            <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-all">
-              <div class="flex items-center justify-between mb-4">
-                <h3 class="text-gray-600 font-medium">Avg. Response Time</h3>
-                <span class="material-symbols-outlined text-3xl text-amber-500">schedule</span>
-              </div>
-              <p class="text-3xl font-bold">48h</p>
-              <p class="text-green-600 flex items-center mt-2 text-sm">
-                <span class="material-symbols-outlined text-sm">trending_down</span>
-                <span>8% decrease</span>
-              </p>
-            </div>
-            <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-all">
-              <div class="flex items-center justify-between mb-4">
-                <h3 class="text-gray-600 font-medium">Active Users</h3>
-                <span class="material-symbols-outlined text-3xl text-blue-500">group</span>
-              </div>
-              <p class="text-3xl font-bold">5,723</p>
-              <p class="text-green-600 flex items-center mt-2 text-sm">
-                <span class="material-symbols-outlined text-sm">trending_up</span>
-                <span>22% increase</span>
-              </p>
-            </div>
-          </div>
-        </section>
-        <section class="mb-12">
-          <h2 class="text-2xl font-bold text-gray-800 mb-6">How It Works</h2>
-          <div class="bg-white rounded-xl shadow-md p-8">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div class="text-center">
-                <div class="w-16 h-16 bg-[#611BF8] rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span class="material-symbols-outlined text-3xl text-primary-600">photo_camera</span>
-                </div>
-                <h3 class="text-lg font-semibold mb-2">1. Report an Issue</h3>
-                <p class="text-gray-600">
-                  Take a photo, add location details, and submit your civic issue report in seconds.
-                </p>
-              </div>
-              <div class="text-center">
-                <div class="w-16 h-16 bg-[#611BF8] rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span class="material-symbols-outlined text-3xl text-primary-600">assignment_ind</span>
-                </div>
-                <h3 class="text-lg font-semibold mb-2">2. City Takes Action</h3>
-                <p class="text-gray-600">
-                  City staff receives your report, assigns it to the right department, and begins work.
-                </p>
-              </div>
-              <div class="text-center">
-                <div class="w-16 h-16 bg-[#611BF8] rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span class="material-symbols-outlined text-3xl text-primary-600">check_circle</span>
-                </div>
-                <h3 class="text-lg font-semibold mb-2">3. Track Resolution</h3>
-                <p class="text-gray-600">
-                  Receive notifications as your issue progresses from acknowledgment to resolution.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-         <section class="mb-12">
-          <div class="bg-gradient-to-r from-[#611BF8] to-[#4607d0] p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-8 text-white font-semibold text-lg rounded-xl shadow-xl overflow-hidden">
-            <div class="grid grid-cols-1 md:grid-cols-2">
-              <div class="p-8 md:p-12 flex flex-col justify-center">
-                <h2 class="text-3xl font-bold text-white mb-4">Get the Mobile App</h2>
-                <p class="text-white/90 mb-6">
-                  Report issues on the go, receive real-time updates, and make your community better with our mobile app.
-                </p>
-                <div class="flex flex-row space-x-4 items-center">
-                  <!-- Official App Store Badge (must use only provided asset) -->
-                  <a href="YOUR_APP_STORE_LINK_HERE" target="_blank" rel="noopener noreferrer">
-                    <img src="../public/Download_on_the_App_Store_Badge_US-UK_RGB_blk_092917.svg"
-                         alt="Download on the App Store"
-                         class="h-12 object-contain" />
-                  </a>
-                  <!-- Official Google Play Badge -->
-                  <a href="YOUR_GOOGLE_PLAY_LINK_HERE" target="_blank" rel="noopener noreferrer">
-                    <img src="../public/GetItOnGooglePlay_Badge_Print_color_English.svg"
-                         alt="Get it on Google Play"
-                         class="h-12 object-contain"
-                         viewBox="10 10 135 40" />
-                  </a>
-                </div>
-              </div>
-              <div class="flex justify-center items-center p-8 relative md:h-auto">
-                <img src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c"
-                     alt="Mobile app interface"
-                     class="max-h-96 object-contain shadow-2xl rounded-xl border-8 border-white transform rotate-3 transition-transform hover:rotate-0" />
-              </div>
-            </div>
-          </div>
-        </section>
-      </main>
-      <footer class="bg-gray-800 text-white py-12">
-        <div class="container mx-auto px-4">
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
-            <div>
-              <div class="flex items-center space-x-2 mb-4">
-                <span class="material-symbols-outlined text-2xl">location_city</span>
-                <h3 class="text-xl font-bold">CivicFix</h3>
-              </div>
-              <p class="text-gray-400 mb-4">
-                Empowering citizens to improve their communities through collaborative issue reporting and resolution
-                tracking.
-              </p>
-              <div class="flex space-x-4">
-                <a href="#" class="text-gray-400 hover:text-white transition-colors">
-                  <i class="fa-brands fa-facebook text-xl"></i>
-                </a>
-                <a href="#" class="text-gray-400 hover:text-white transition-colors">
-                  <i class="fa-brands fa-twitter text-xl"></i>
-                </a>
-                <a href="#" class="text-gray-400 hover:text-white transition-colors">
-                  <i class="fa-brands fa-instagram text-xl"></i>
-                </a>
-                <a href="#" class="text-gray-400 hover:text-white transition-colors">
-                  <i class="fa-brands fa-linkedin text-xl"></i>
-                </a>
-              </div>
-            </div>
-            <div>
-              <h3 class="text-lg font-semibold mb-4">Quick Links</h3>
-              <ul class="space-y-2">
-                <li>
-                  <a href="#" class="text-gray-400 hover:text-white transition-colors">Home</a>
-                </li>
-                <li>
-                  <a href="#" class="text-gray-400 hover:text-white transition-colors">Report an Issue</a>
-                </li>
-                <li>
-                  <a href="#" class="text-gray-400 hover:text-white transition-colors">View Map</a>
-                </li>
-                <li>
-                  <a href="#" class="text-gray-400 hover:text-white transition-colors">Dashboard</a>
-                </li>
-                <li>
-                  <a href="#" class="text-gray-400 hover:text-white transition-colors">Community</a>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h3 class="text-lg font-semibold mb-4">Support</h3>
-              <ul class="space-y-2">
-                <li>
-                  <a href="#" class="text-gray-400 hover:text-white transition-colors">Help Center</a>
-                </li>
-                <li>
-                  <a href="#" class="text-gray-400 hover:text-white transition-colors">FAQs</a>
-                </li>
-                <li>
-                  <a href="#" class="text-gray-400 hover:text-white transition-colors">Contact Us</a>
-                </li>
-                <li>
-                  <a href="#" class="text-gray-400 hover:text-white transition-colors">Privacy Policy</a>
-                </li>
-                <li>
-                  <a href="#" class="text-gray-400 hover:text-white transition-colors">Terms of Service</a>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h3 class="text-lg font-semibold mb-4">Stay Updated</h3>
-              <p class="text-gray-400 mb-4">
-                Subscribe to our newsletter for updates on civic improvements.
-              </p>
-              <form>
-                <div class="flex">
-                  <input type="email" placeholder="Your email address"
-                    class="px-4 py-2 rounded-l-lg w-full focus:outline-none text-gray-800 bg-white" />
-                  <button class="bg-[#611BF8] hover:bg-[#611BF8] transition-colors px-4 py-2 rounded-r-lg">
-                    <span class="material-symbols-outlined">send</span>
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-          <div class="pt-8 border-t border-gray-700 text-center text-gray-400">
-            <p>© 2025 CivicFix. All rights reserved.</p>
-          </div>
-        </div>
-      </footer>
-      <div class="md:hidden fixed bottom-6 right-6">
-        <button
-          class="bg-[#611BF8] text-white rounded-full w-14 h-14 flex items-center justify-center shadow-lg hover:bg-[#611BF8] transition-all">
-          <span class="material-symbols-outlined text-2xl">add</span>
-        </button>
       </div>
-    </div>
+      <!-- Mobile Navigation (hidden on desktop) -->
+      <div id="mobile-menu" class="hidden md:hidden bg-[#5a18e6] text-white">
+        <a href="index.html" class="block px-4 py-3 hover:bg-white/20 transition-colors">Home</a>
+        <a href="my-reports.html" class="block px-4 py-3 hover:bg-white/20 transition-colors">My Reports</a>
+        <a href="about.html" class="block px-4 py-3 hover:bg-white/20 transition-colors">About</a>
+        <a href="contact.html" class="block px-4 py-3 hover:bg-white/20 transition-colors">Contact</a>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+      <!-- Hero Section with Image Slider -->
+      <section
+        class="mb-12 relative rounded-xl overflow-hidden shadow-lg h-96 text-white bg-gradient-to-r from-indigo-500 to-indigo-700">
+        <div id="slider-container" class="h-full relative">
+          <div class="slide absolute w-full h-full opacity-0 transition-opacity duration-700 ease-in-out">
+            <img src="../public/tram.jpg" class="w-full h-full object-cover" alt="Howrah Bridge, Kolkata" />
+          </div>
+          <div class="slide absolute w-full h-full opacity-0 transition-opacity duration-700 ease-in-out">
+            <img src="../public/road.jpg" class="w-full h-full object-cover"
+              alt="Community volunteers working together" />
+          </div>
+          <div class="slide absolute w-full h-full opacity-0 transition-opacity duration-700 ease-in-out">
+            <img src="../public/bridge.jpg" class="w-full h-full object-cover" alt="Kolkata tram on a city street" />
+          </div>
+        </div>
+
+        <div class="absolute inset-0 bg-gradient-to-r from-indigo-800/70 to-indigo-500/50"></div>
+
+        <div class="absolute inset-0 z-20 flex flex-col justify-center p-8 md:p-12">
+          <h2 class="text-4xl font-bold mb-4">Make Your City Better</h2>
+          <p class="text-xl mb-6 max-w-2xl">
+            Found an issue? Report it now and help improve our community.
+          </p>
+          <a href="report.html"
+            class="bg-white text-indigo-600 hover:bg-opacity-90 transition-all w-52 py-3 rounded-full font-semibold flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+            <span class="material-symbols-outlined">add_circle</span>
+            <span>Report a New Issue</span>
+          </a>
+        </div>
+
+        <button id="prevBtn"
+          class="absolute z-30 top-1/2 left-4 -translate-y-1/2 bg-white/20 hover:bg-white/40 p-2 rounded-full transition-colors"
+          aria-label="Previous Slide">
+          <span class="material-symbols-outlined">arrow_back_ios_new</span>
+        </button>
+        <button id="nextBtn"
+          class="absolute z-30 top-1/2 right-4 -translate-y-1/2 bg-white/20 hover:bg-white/40 p-2 rounded-full transition-colors"
+          aria-label="Next Slide">
+          <span class="material-symbols-outlined">arrow_forward_ios</span>
+        </button>
+
+        <div id="slider-dots" class="absolute z-30 bottom-5 left-1/2 -translate-x-1/2 flex space-x-2">
+          <div class="dot w-3 h-3 bg-white/50 rounded-full cursor-pointer transition-colors"></div>
+          <div class="dot w-3 h-3 bg-white/50 rounded-full cursor-pointer transition-colors"></div>
+          <div class="dot w-3 h-3 bg-white/50 rounded-full cursor-pointer transition-colors"></div>
+        </div>
+      </section>
+
+      <!-- Track Your Issue Section -->
+      <section class="mb-12">
+        <div class="bg-white rounded-xl shadow-md p-6">
+          <h2 class="text-2xl font-bold text-gray-800 mb-4">Track Your Report</h2>
+          <div class="flex flex-col sm:flex-row gap-4">
+            <input id="tracking-id-input" type="text" placeholder="Enter your Tracking ID (e.g., CFX-123456)"
+              class="flex-grow w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#611BF8]">
+            <button id="track-btn"
+              class="w-full sm:w-auto bg-[#611BF8] text-white font-semibold px-6 py-2 rounded-lg hover:bg-opacity-90 transition-all">Track</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Announcements Section -->
+      <section class="mb-12">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6">Announcements & Alerts</h2>
+        <div class="space-y-4">
+          <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-r-lg shadow-md" role="alert">
+            <div class="flex">
+              <div class="py-1"><span class="material-symbols-outlined mr-4">warning</span></div>
+              <div>
+                <p class="font-bold">High Alert: Water Main Break</p>
+                <p class="text-sm">Major water main break reported at Park Street crossing. Expect traffic diversions
+                  and low water pressure in the area. Repair crews dispatched.</p>
+              </div>
+            </div>
+          </div>
+          <div class="bg-amber-100 border-l-4 border-amber-500 text-amber-700 p-4 rounded-r-lg shadow-md" role="alert">
+            <div class="flex">
+              <div class="py-1"><span class="material-symbols-outlined mr-4">info</span></div>
+              <div>
+                <p class="font-bold">Notice: Waste Collection Schedule Change</p>
+                <p class="text-sm">Due to a public holiday, waste collection for Sector V, Salt Lake will be postponed
+                  to Friday, Sept 12th. Please cooperate.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Pending Problems & Top Contributors -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+        <!-- Pending Problems -->
+        <div class="lg:col-span-2">
+          <h2 class="text-2xl font-bold text-gray-800 mb-6">Pending Problems</h2>
+          <div class="space-y-4">
+            <div class="bg-white rounded-xl shadow-md p-4 flex items-start space-x-4 hover:shadow-lg transition-shadow">
+              <div class="w-12 h-12 bg-red-100 text-red-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                <span class="material-symbols-outlined">light_mode</span>
+              </div>
+              <div>
+                <p class="font-bold text-gray-800">Broken Streetlight</p>
+                <p class="text-sm text-gray-500 mb-1">Opposite Mocambo, Park Street, Kolkata</p>
+                <p class="text-xs text-gray-400">ID: CFX-MOCK1</p>
+              </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-md p-4 flex items-start space-x-4 hover:shadow-lg transition-shadow">
+              <div
+                class="w-12 h-12 bg-yellow-100 text-yellow-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                <span class="material-symbols-outlined">construction</span>
+              </div>
+              <div>
+                <p class="font-bold text-gray-800">Large Pothole</p>
+                <p class="text-sm text-gray-500 mb-1">Near College More, Salt Lake Sector V, Kolkata</p>
+                <p class="text-xs text-gray-400">ID: CFX-MOCK2</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Top Contributors -->
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800 mb-6">Top Contributors</h2>
+          <div class="space-y-4">
+            <div
+              class="bg-white rounded-xl shadow-md p-4 flex items-center space-x-4 hover:shadow-lg transition-shadow">
+              <div class="w-10 h-10 bg-amber-100 text-amber-500 rounded-full flex items-center justify-center"><span
+                  class="material-symbols-outlined">workspace_premium</span></div>
+              <div>
+                <p class="font-bold text-gray-800">Priya Sharma</p>
+                <p class="text-sm text-gray-500">240 Points</p>
+              </div>
+            </div>
+            <div
+              class="bg-white rounded-xl shadow-md p-4 flex items-center space-x-4 hover:shadow-lg transition-shadow">
+              <div class="w-10 h-10 bg-slate-100 text-slate-500 rounded-full flex items-center justify-center"><span
+                  class="material-symbols-outlined">military_tech</span></div>
+              <div>
+                <p class="font-bold text-gray-800">Amit Kumar</p>
+                <p class="text-sm text-gray-500">215 Points</p>
+              </div>
+            </div>
+            <div
+              class="bg-white rounded-xl shadow-md p-4 flex items-center space-x-4 hover:shadow-lg transition-shadow">
+              <div class="w-10 h-10 bg-sky-100 text-sky-500 rounded-full flex items-center justify-center"><span
+                  class="material-symbols-outlined">verified</span></div>
+              <div>
+                <p class="font-bold text-gray-800">Sunita Devi</p>
+                <p class="text-sm text-gray-500">190 Points</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recently Solved -->
+      <section class="mb-12">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6">Recently Solved</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="bg-white rounded-xl shadow-md p-4 flex items-start space-x-4 hover:shadow-lg transition-shadow">
+            <div
+              class="w-12 h-12 bg-green-100 text-green-500 rounded-lg flex items-center justify-center flex-shrink-0">
+              <span class="material-symbols-outlined">delete</span>
+            </div>
+            <div>
+              <p class="font-bold text-gray-800">Overflowing Trash Bin</p>
+              <p class="text-sm text-gray-500 mb-1">New Town Bus Stand, Action Area I, Kolkata</p>
+              <p class="text-xs text-gray-400">ID: CFX-MOCK3</p>
+            </div>
+          </div>
+          <div class="bg-white rounded-xl shadow-md p-4 flex items-start space-x-4 hover:shadow-lg transition-shadow">
+            <div
+              class="w-12 h-12 bg-green-100 text-green-500 rounded-lg flex items-center justify-center flex-shrink-0">
+              <span class="material-symbols-outlined">format_paint</span>
+            </div>
+            <div>
+              <p class="font-bold text-gray-800">Graffiti on Wall</p>
+              <p class="text-sm text-gray-500 mb-1">Near Basanti Devi College, Gariahat, Kolkata</p>
+              <p class="text-xs text-gray-400">ID: CFX-MOCK4</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Community Polls Section -->
+      <section class="mb-12">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6">Community Poll</h2>
+        <div class="bg-white rounded-xl shadow-md">
+          <div class="p-6">
+            <p class="font-semibold text-gray-900 mb-1">What should be the priority for the next budget allocation in
+              the Gariahat area?</p>
+            <p class="text-sm text-gray-600 mb-4">Your feedback helps shape our community. Please cast your vote.</p>
+            <div id="poll-options" class="space-y-3">
+              <button
+                class="poll-option w-full text-left p-3 border rounded-lg hover:bg-gray-50 transition-colors">Improving
+                road quality and fixing potholes.</button>
+              <button
+                class="poll-option w-full text-left p-3 border rounded-lg hover:bg-gray-50 transition-colors">Installing
+                more streetlights for better safety.</button>
+              <button
+                class="poll-option w-full text-left p-3 border rounded-lg hover:bg-gray-50 transition-colors">Upgrading
+                the public park with new equipment.</button>
+            </div>
+            <div id="poll-results" class="hidden space-y-3 mt-4">
+              <!-- Results will be shown here -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- How It Works Section -->
+      <section class="mb-12">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6">How It Works</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+          <div class="bg-white rounded-xl shadow-md p-6">
+            <div
+              class="w-16 h-16 bg-[#F0EAFE] text-[#611BF8] rounded-full flex items-center justify-center mx-auto mb-4">
+              <span class="material-symbols-outlined text-3xl">photo_camera</span>
+            </div>
+            <h3 class="text-lg font-semibold mb-2">1. Report an Issue</h3>
+            <p class="text-gray-600">Capture a photo, add details, and submit your report in seconds.</p>
+          </div>
+          <div class="bg-white rounded-xl shadow-md p-6">
+            <div
+              class="w-16 h-16 bg-[#F0EAFE] text-[#611BF8] rounded-full flex items-center justify-center mx-auto mb-4">
+              <span class="material-symbols-outlined text-3xl">assignment_ind</span>
+            </div>
+            <h3 class="text-lg font-semibold mb-2">2. City Takes Action</h3>
+            <p class="text-gray-600">Your report is assigned to the correct department for resolution.</p>
+          </div>
+          <div class="bg-white rounded-xl shadow-md p-6">
+            <div
+              class="w-16 h-16 bg-[#F0EAFE] text-[#611BF8] rounded-full flex items-center justify-center mx-auto mb-4">
+              <span class="material-symbols-outlined text-3xl">check_circle</span>
+            </div>
+            <h3 class="text-lg font-semibold mb-2">3. Track Resolution</h3>
+            <p class="text-gray-600">Receive real-time updates as your issue is resolved.</p>
+          </div>
+        </div>
+      </section>
+    </main>
   </div>
 
+
+  <!-- Tracking Modal -->
+  <div id="tracking-modal" class="hidden fixed inset-0 z-[100] items-center justify-center modal-backdrop p-4">
+    <div id="tracking-modal-content" class="bg-white rounded-lg shadow-2xl w-full max-w-lg p-6 animate-fade-in-up">
+    </div>
+  </div>
+  <footer class="bg-gray-800 text-white py-12">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+        <div>
+          <div class="flex items-center space-x-2 mb-4">
+            <span class="material-symbols-outlined text-2xl">location_city</span>
+            <h3 class="text-xl font-bold">CivicFix</h3>
+          </div>
+          <p class="text-gray-400 mb-4">
+            Empowering citizens to improve their communities through collaborative issue reporting and resolution
+            tracking.
+          </p>
+          <div class="flex space-x-4">
+            <a href="#" class="text-gray-400 hover:text-white transition-colors">
+              <i class="fa-brands fa-facebook text-xl"></i>
+            </a>
+            <a href="#" class="text-gray-400 hover:text-white transition-colors">
+              <i class="fa-brands fa-twitter text-xl"></i>
+            </a>
+            <a href="#" class="text-gray-400 hover:text-white transition-colors">
+              <i class="fa-brands fa-instagram text-xl"></i>
+            </a>
+            <a href="#" class="text-gray-400 hover:text-white transition-colors">
+              <i class="fa-brands fa-linkedin text-xl"></i>
+            </a>
+          </div>
+        </div>
+        <div>
+          <h3 class="text-lg font-semibold mb-4">Quick Links</h3>
+          <ul class="space-y-2">
+            <li>
+              <a href="index.html" class="text-gray-400 hover:text-white transition-colors">Home</a>
+            </li>
+            <li>
+              <a href="report.html" class="text-gray-400 hover:text-white transition-colors">Report an Issue</a>
+            </li>
+            <li>
+              <a href="index.html" class="text-gray-400 hover:text-white transition-colors">View Map</a>
+            </li>
+            <li>
+              <a href="index.html" class="text-gray-400 hover:text-white transition-colors">Dashboard</a>
+            </li>
+            <li>
+              <a href="contact.html" class="text-gray-400 hover:text-white transition-colors">Community</a>
+            </li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-lg font-semibold mb-4">Support</h3>
+          <ul class="space-y-2">
+            <li>
+              <a href="#" class="text-gray-400 hover:text-white transition-colors">Help Center</a>
+            </li>
+            <li>
+              <a href="#" class="text-gray-400 hover:text-white transition-colors">FAQs</a>
+            </li>
+            <li>
+              <a href="#" class="text-gray-400 hover:text-white transition-colors">Contact Us</a>
+            </li>
+            <li>
+              <a href="#" class="text-gray-400 hover:text-white transition-colors">Privacy Policy</a>
+            </li>
+            <li>
+              <a href="#" class="text-gray-400 hover:text-white transition-colors">Terms of Service</a>
+            </li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-lg font-semibold mb-4">Stay Updated</h3>
+          <p class="text-gray-400 mb-4">
+            Subscribe to our newsletter for updates on civic improvements.
+          </p>
+          <form>
+            <div class="flex">
+              <input type="email" placeholder="Your email address"
+                class="px-4 py-2 rounded-l-lg w-full focus:outline-none text-gray-800 bg-white" />
+              <button class="bg-[#611BF8] hover:bg-[#611BF8] transition-colors px-4 py-2 rounded-r-lg">
+                <span class="material-symbols-outlined">send</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="pt-8 border-t border-gray-700 text-center text-gray-400">
+        <p>© 2025 CivicFix. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const user = JSON.parse(localStorage.getItem('civicFixUser'));
+      if (!user) {
+        window.location.href = 'login.html';
+        return;
+      }
+      document.getElementById('user-name').textContent = user.name;
+      document.getElementById('user-initial').textContent = user.name.charAt(0).toUpperCase();
+
+      // Mobile menu toggle
+      const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+      const mobileMenu = document.getElementById('mobile-menu');
+      mobileMenuBtn.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+
+      // Mock data for tracking
+      const mockReports = [
+        { id: 'CFX-MOCK1', issueType: 'Broken Streetlight', location: 'Opposite Mocambo, Park Street, Kolkata', status: 'Pending' },
+        { id: 'CFX-MOCK2', issueType: 'Large Pothole', location: 'Near College More, Salt Lake Sector V, Kolkata', status: 'InProgress' },
+        { id: 'CFX-MOCK3', issueType: 'Overflowing Trash Bin', location: 'New Town Bus Stand, Action Area I, Kolkata', status: 'Resolved' },
+        { id: 'CFX-MOCK4', issueType: 'Graffiti on Wall', location: 'Near Basanti Devi College, Gariahat, Kolkata', status: 'Resolved' }
+      ];
+      const allTrackableReports = [...mockReports, ...(JSON.parse(localStorage.getItem('civicFixReports')) || [])];
+
+      // Tracking Modal Logic
+      const trackBtn = document.getElementById('track-btn');
+      const trackingInput = document.getElementById('tracking-id-input');
+      const trackingModal = document.getElementById('tracking-modal');
+      const trackingModalContent = document.getElementById('tracking-modal-content');
+
+      const openTrackingModal = (report) => {
+        const statusInfo = { Pending: { color: 'red' }, InProgress: { color: 'yellow' }, Resolved: { color: 'green' } };
+        trackingModalContent.innerHTML = `
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-xl font-bold text-gray-800">Report Status</h2>
+                        <button id="close-track-modal" class="text-gray-500 hover:text-gray-800 text-3xl leading-none">&times;</button>
+                    </div>
+                    <div class="space-y-3">
+                        <p><strong class="font-medium text-gray-800">Tracking ID:</strong> ${report.id}</p>
+                        <p><strong class="font-medium text-gray-800">Status:</strong> <span class="text-white rounded-full px-3 py-1 text-sm font-medium bg-${statusInfo[report.status].color}-500">${report.status}</span></p>
+                        <p><strong class="font-medium text-gray-800">Issue:</strong> ${report.issueType}</p>
+                        <p><strong class="font-medium text-gray-800">Location:</strong> ${report.location}</p>
+                    </div>`;
+        trackingModal.classList.remove('hidden');
+        trackingModal.classList.add('flex');
+        document.getElementById('close-track-modal').onclick = closeTrackingModal;
+      };
+      const closeTrackingModal = () => trackingModal.classList.add('hidden');
+      trackBtn.addEventListener('click', () => {
+        const report = allTrackableReports.find(r => r.id.toLowerCase() === trackingInput.value.trim().toLowerCase());
+        if (report) openTrackingModal(report);
+        else alert('Invalid Tracking ID. Please check and try again.');
+      });
+      trackingModal.addEventListener('click', (e) => {
+        if (e.target === trackingModal) closeTrackingModal();
+      });
+
+      // Poll Logic
+      const pollOptionsContainer = document.getElementById('poll-options');
+      const pollResultsContainer = document.getElementById('poll-results');
+      const pollOptions = document.querySelectorAll('.poll-option');
+      pollOptions.forEach(option => {
+        option.addEventListener('click', () => {
+          pollOptionsContainer.classList.add('hidden');
+          // Mock results for demonstration
+          pollResultsContainer.innerHTML = `
+                        <p class="font-semibold text-gray-800">Thank you for voting! Current results:</p>
+                        <div>
+                            <div class="flex justify-between mb-1"><span class="text-sm font-medium text-gray-700">Road Quality</span><span class="text-sm font-medium text-gray-700">58%</span></div>
+                            <div class="w-full bg-gray-200 rounded-full h-2.5"><div class="bg-blue-600 h-2.5 rounded-full" style="width: 58%"></div></div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1"><span class="text-sm font-medium text-gray-700">More Streetlights</span><span class="text-sm font-medium text-gray-700">32%</span></div>
+                            <div class="w-full bg-gray-200 rounded-full h-2.5"><div class="bg-blue-600 h-2.5 rounded-full" style="width: 32%"></div></div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1"><span class="text-sm font-medium text-gray-700">Park Upgrade</span><span class="text-sm font-medium text-gray-700">10%</span></div>
+                            <div class="w-full bg-gray-200 rounded-full h-2.5"><div class="bg-blue-600 h-2.5 rounded-full" style="width: 10%"></div></div>
+                        </div>
+                    `;
+          pollResultsContainer.classList.remove('hidden');
+        });
+      });
+
+      // Image Slider Logic
+      const slides = document.querySelectorAll(".slide");
+      const dots = document.querySelectorAll(".dot");
+      const prevBtn = document.getElementById("prevBtn");
+      const nextBtn = document.getElementById("nextBtn");
+      let currentIndex = 0;
+      let slideInterval;
+
+      function showSlide(index) {
+        slides.forEach((slide, i) => {
+          slide.classList.remove("opacity-100", "z-10");
+          slide.classList.add("opacity-0");
+          dots[i].classList.remove("bg-white");
+          dots[i].classList.add("bg-white/50");
+        });
+        slides[index].classList.remove("opacity-0");
+        slides[index].classList.add("opacity-100", "z-10");
+        dots[index].classList.remove("bg-white/50");
+        dots[index].classList.add("bg-white");
+        currentIndex = index;
+      }
+
+      function nextSlide() {
+        let newIndex = (currentIndex + 1) % slides.length;
+        showSlide(newIndex);
+      }
+
+      function prevSlide() {
+        let newIndex = (currentIndex - 1 + slides.length) % slides.length;
+        showSlide(newIndex);
+      }
+
+      function startAutoSlide() {
+        slideInterval = setInterval(nextSlide, 5000);
+      }
+
+      function stopAutoSlide() {
+        clearInterval(slideInterval);
+      }
+
+      // Event Listeners
+      nextBtn.addEventListener("click", () => {
+        nextSlide();
+        stopAutoSlide();
+        startAutoSlide();
+      });
+      prevBtn.addEventListener("click", () => {
+        prevSlide();
+        stopAutoSlide();
+        startAutoSlide();
+      });
+      dots.forEach((dot, i) => {
+        dot.addEventListener("click", () => {
+          showSlide(i);
+          stopAutoSlide();
+          startAutoSlide();
+        });
+      });
+
+      // Init
+      showSlide(0);
+      startAutoSlide();
+      const sliderContainer = document.getElementById('slider-container');
+
+      sliderContainer.addEventListener('mouseenter', stopAutoSlide);
+      sliderContainer.addEventListener('mouseleave', startAutoSlide);
+
+    });
+  </script>
 </body>
 
 </html>
