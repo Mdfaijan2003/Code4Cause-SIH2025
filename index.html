@@ -1,28 +1,31 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CivicFix</title>
+  <script>
+    // Configure Tailwind to use class-based dark mode
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {}
+      },
+      plugins: []
+    }
+  </script>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet"
     href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet"
-    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
-    xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
-    crossorigin="anonymous" referrerpolicy="no-referrer" />
   <style>
     body {
       font-family: 'Inter', sans-serif;
     }
+
 
     .modal-backdrop {
       background-color: rgba(0, 0, 0, 0.5);
@@ -57,7 +60,6 @@
       }
     }
 
-    /* Slider Styles */
     .slide {
       transition: opacity 1s ease-in-out;
     }
@@ -65,27 +67,55 @@
     .dot.active {
       background-color: white;
     }
+
+    /* CSS for the animated toggle switch */
+    #theme-toggle-checkbox:checked+label #theme-toggle-dot {
+      transform: translateX(100%);
+    }
   </style>
 </head>
 
-<body class="bg-slate-50">
+<body class="bg-slate-100 dark:bg-slate-900 transition-colors duration-300">
   <div id="main-container">
-    <!-- Header Section -->
-    <header class="bg-white text-gray-800 shadow-lg sticky top-0 z-50">
-      <!-- Top Bar -->
-      <div class="bg-gray-100 border-b">
-        <div class="container mx-auto px-4 py-2 flex justify-between items-center">
-          <div class="flex items-center space-x-3">
-            <img src="Public/governmentofindia.png" alt="Govt of WB Emblem" class="h-12" />
-            <div>
-              <p class="font-semibold text-gray-800">Government of India</p>
-              <p class="text-sm text-gray-600">Urban Development & Municipal Affairs</p>
+    <header
+      class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm text-gray-800 dark:text-slate-200 shadow-lg sticky top-0 z-50">
+      <div class="bg-slate-100/80 dark:bg-slate-700/80 border-b border-slate-200 dark:border-slate-600">
+        <div class="container mx-auto px-4 py-2 sm:hidden">
+          <button id="top-bar-toggle"
+            class="w-full flex justify-between items-center text-sm font-medium text-slate-600 dark:text-slate-300">
+            <span>🌐 Site Utilities (Language, etc.)</span>
+            <span class="material-symbols-outlined transition-transform">expand_more</span>
+          </button>
+        </div>
+        <div id="top-bar-content" class="hidden sm:block">
+          <div
+            class="container mx-auto px-4 py-2 flex flex-col sm:flex-row justify-between items-center space-y-2 sm:space-y-0">
+            <div class="flex items-center space-x-3">
+              <img src="Public/governmentofindia.png" alt="Govt of WB Emblem" class="h-12" />
+              <div>
+                <p class="font-semibold text-slate-800 dark:text-slate-100">Government of India</p>
+                <p class="text-sm text-slate-600 dark:text-slate-300">Urban Development & Municipal Affairs</p>
+              </div>
             </div>
+            <div class="w-full sm:w-64" id="google_translate_element">
+              <label for="language"
+                class="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-300 text-center sm:text-left">
+                🌐 Select Language
+              </label>
+              <select id="language" name="language"
+                class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-white dark:bg-gray-600 border-gray-300 dark:border-gray-500 text-gray-800 dark:text-white">
+                <option value="en">English (US)</option>
+                <option value="as">অসমীয়া (Assamese)</option>
+                <option value="bn">বাংলা (Bengali)</option>
+                <option value="hi">हिन्दी (Hindi)</option>
+                <option value="ta">தமிழ் (Tamil)</option>
+                <option value="te">తెలుగు (Telugu)</option>
+              </select>
+            </div>
+            <p class="hidden md:block text-sm text-slate-700 dark:text-slate-300 font-medium" id="current-date"></p>
           </div>
-          <p class="hidden sm:block text-sm text-gray-700 font-medium" id="current-date">Thursday, 11 September 2025</p>
         </div>
       </div>
-      <!-- Main Navigation -->
       <div class="bg-[#611BF8] text-white">
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
           <div class="flex items-center space-x-2">
@@ -102,278 +132,285 @@
             <a href="contact.html"
               class="text-sm lg:text-base hover:bg-white/20 px-3 py-1 rounded-md transition-colors">Contact</a>
           </nav>
-          <div class="flex items-center space-x-2 md:space-x-4">
-            <div
-              class="flex items-center space-x-2 cursor-pointer hover:bg-white/20 transition-all px-3 py-1 rounded-full">
-              <div id="user-initial"
-                class="w-8 h-8 bg-white text-[#611BF8] rounded-full flex items-center justify-center font-bold text-sm">
-                G</div>
-              <span id="user-name" class="font-medium text-sm">Guest</span>
+
+          <div
+            class="flex items-center space-x-2 cursor-pointer hover:bg-white/20 transition-all px-3 py-1 rounded-full">
+            <div id="user-initial"
+              class="w-8 h-8 bg-white text-[#611BF8] rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">
+              G</div>
+            <span id="user-name" class="font-medium text-sm hidden sm:inline">Guest</span>
+          </div>
+          <button id="mobile-menu-btn" class="md:hidden p-2 rounded-md hover:bg-white/20">
+            <span class="material-symbols-outlined text-3xl">menu</span>
+          </button>
+        </div>
+      </div>
+  </div>
+  <div id="mobile-menu" class="hidden md:hidden bg-[#5a18e6] text-white">
+    <a href="index.html" class="block px-4 py-3 hover:bg-white/20 transition-colors">Home</a>
+    <a href="my-reports.html" class="block px-4 py-3 hover:bg-white/20 transition-colors">My Reports</a>
+    <a href="about.html" class="block px-4 py-3 hover:bg-white/20 transition-colors">About</a>
+    <a href="contact.html" class="block px-4 py-3 hover:bg-white/20 transition-colors">Contact</a>
+  </div>
+
+  <input type="checkbox" id="theme-toggle-checkbox" class="hidden" />
+  <button id="theme-toggle-button"
+    class="px-4 py-2 rounded bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 shadow-md hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors duration-300">
+    <span class="material-symbols-outlined text-sm" id="theme-toggle-icon">light_mode</span>
+  </button>
+  </header>
+
+  <main class="container mx-auto px-4 py-8">
+    <section
+      class="mb-12 relative rounded-xl overflow-hidden shadow-lg h-80 md:h-96 text-white bg-gradient-to-r from-indigo-500 to-indigo-700">
+      <div class="absolute inset-0 bg-gradient-to-r from-indigo-800/70 to-indigo-500/50 z-10"></div>
+      <div id="slider-container" class="h-full relative" onclick="window.location.href='report.html'">
+        <div class="slide absolute w-full h-full opacity-0 transition-opacity duration-700 ease-in-out">
+          <picture>
+            <source media="(min-width: 640px)" srcset="Public/CIVICFIX.svg"><img
+              src="Public/CIVICFIX3s.svg" class="w-full h-full object-cover object-center"
+              alt="An engaging scene">
+          </picture>
+        </div>
+        <div class="slide absolute w-full h-full opacity-0 transition-opacity duration-700 ease-in-out">
+          <picture>
+            <source media="(min-width: 640px)" srcset="Public/CIVICFIX2.svg"><img
+              src="Public/CIVICFIX2.svg" class="w-full h-full object-cover object-center"
+              alt="An engaging scene">
+          </picture>
+        </div>
+        <div class="slide absolute w-full h-full opacity-0 transition-opacity duration-700 ease-in-out">
+          <picture>
+            <source media="(min-width: 640px)" srcset="Public/CIVICFIX-3-f.png"><img
+              src="Public/CIVICFIX3s.svg" class="w-full h-full object-cover object-center"
+              alt="An engaging scene">
+          </picture>
+        </div>
+
+      <div class="absolute bottom-4 left-1/2 -translate-x-1/2 sm:left-5 sm:translate-x-0 z-20 w-11/12 max-w-xs sm:w-52">
+        <a href="report.html"
+          class="bg-white text-indigo-600 hover:bg-opacity-90 transition-all py-3 rounded-full font-semibold flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl transform hover:-translate-y-1"><span
+            class="material-symbols-outlined">add_circle</span><span>Report a New Issue</span></a>
+      </div>
+      <button id="prevBtn"
+        class="absolute z-30 top-1/2 left-4 -translate-y-1/2 bg-white/20 hover:bg-white/40 p-2 rounded-full transition-colors"><span
+          class="material-symbols-outlined">arrow_back_ios_new</span></button>
+      <button id="nextBtn"
+        class="absolute z-30 top-1/2 right-4 -translate-y-1/2 bg-white/20 hover:bg-white/40 p-2 rounded-full transition-colors"><span
+          class="material-symbols-outlined">arrow_forward_ios</span></button>
+      <div id="slider-dots" class="absolute z-30 bottom-5 left-1/2 -translate-x-1/2 flex space-x-2">
+        <div class="dot w-3 h-3 bg-white/50 rounded-full cursor-pointer transition-colors"></div>
+        <div class="dot w-3 h-3 bg-white/50 rounded-full cursor-pointer transition-colors"></div>
+        <div class="dot w-3 h-3 bg-white/50 rounded-full cursor-pointer transition-colors"></div>
+      </div>
+    </section>
+
+    <section class="mb-12">
+      <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md p-6 border border-transparent dark:border-slate-700">
+        <h2 class="text-xl md:text-2xl font-bold text-slate-800 dark:text-slate-100 mb-4">Track Your Report</h2>
+        <div class="flex flex-col sm:flex-row gap-4">
+          <input id="tracking-id-input" type="text" placeholder="Enter your Tracking ID (e.g., CFX-123456)"
+            class="flex-grow w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#611BF8] bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200">
+          <button id="track-btn"
+            class="w-full sm:w-auto bg-[#611BF8] text-white font-semibold px-6 py-2 rounded-lg hover:bg-opacity-90 transition-all">Track</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="mb-12">
+      <h2 class="text-xl md:text-2xl font-bold text-slate-800 dark:text-slate-100 mb-6">Announcements & Alerts</h2>
+      <div class="space-y-4">
+        <div
+          class="bg-red-100 border-l-4 border-red-500 text-red-800 dark:bg-red-900/30 dark:border-red-600 dark:text-red-300 p-4 rounded-r-lg shadow-md"
+          role="alert">
+          <div class="flex">
+            <div class="py-1"><span class="material-symbols-outlined mr-4">warning</span></div>
+            <div>
+              <p class="font-bold">High Alert: Water Main Break</p>
+              <p class="text-sm">Major water main break reported at Park Street crossing. Expect traffic diversions
+                and low water pressure in the area. Repair crews dispatched.</p>
             </div>
-            <button id="mobile-menu-btn" class="md:hidden p-2 rounded-md hover:bg-white/20">
-              <span class="material-symbols-outlined text-3xl">menu</span>
-            </button>
+          </div>
+        </div>
+        <div
+          class="bg-amber-100 border-l-4 border-amber-500 text-amber-800 dark:bg-amber-900/30 dark:border-amber-600 dark:text-amber-300 p-4 rounded-r-lg shadow-md"
+          role="alert">
+          <div class="flex">
+            <div class="py-1"><span class="material-symbols-outlined mr-4">info</span></div>
+            <div>
+              <p class="font-bold">Notice: Waste Collection Schedule Change</p>
+              <p class="text-sm">Due to a public holiday, waste collection for Sector V, Salt Lake will be postponed
+                to Friday, Sept 26th. Please cooperate.</p>
+            </div>
           </div>
         </div>
       </div>
-      <!-- Mobile Navigation (hidden on desktop) -->
-      <div id="mobile-menu" class="hidden md:hidden bg-[#5a18e6] text-white">
-        <a href="index.html" class="block px-4 py-3 hover:bg-white/20 transition-colors">Home</a>
-        <a href="my-reports.html" class="block px-4 py-3 hover:bg-white/20 transition-colors">My Reports</a>
-        <a href="about.html" class="block px-4 py-3 hover:bg-white/20 transition-colors">About</a>
-        <a href="contact.html" class="block px-4 py-3 hover:bg-white/20 transition-colors">Contact</a>
-      </div>
-    </header>
+    </section>
 
-    <!-- Main Content -->
-    <main class="container mx-auto px-4 py-8">
-      <!-- Hero Section with Image Slider -->
-      <section
-        class="mb-12 relative rounded-xl overflow-hidden shadow-lg h-96 text-white bg-gradient-to-r from-indigo-500 to-indigo-700">
-        <div class="absolute inset-0 bg-gradient-to-r from-indigo-800/70 to-indigo-500/50 z-1"></div>
-        <div id="slider-container" class="h-full relative">
-          <div class="slide absolute w-full h-full opacity-0 transition-opacity duration-700 ease-in-out">
-            <img src="Public/Tram.jpg" class="w-full h-full object-cover" alt="Howrah Bridge, Kolkata" />
-          </div>
-          <div class="slide absolute w-full h-full opacity-0 transition-opacity duration-700 ease-in-out">
-            <img src="Public/Garbage.jpg" class="w-full h-full object-cover"
-              alt="Community volunteers working together" />
-          </div>
-          <div class="slide absolute w-full h-full opacity-0 transition-opacity duration-700 ease-in-out">
-            <img src="Public/Bridge.jpg" class="w-full h-full object-cover" alt="Kolkata tram on a city street" />
-          </div>
-        </div>
-
-
-        <div class="absolute inset-0 z-20 flex flex-col justify-center p-8 md:p-12">
-          <h2 class="text-4xl font-bold mb-4">Make Your City Better</h2>
-          <p class="text-xl mb-6 max-w-2xl">
-            Found an issue? Report it now and help improve our community.
-          </p>
-          <a href="report.html"
-            class="bg-white text-indigo-600 hover:bg-opacity-90 transition-all w-52 py-3 rounded-full font-semibold flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
-            <span class="material-symbols-outlined">add_circle</span>
-            <span>Report a New Issue</span>
-          </a>
-        </div>
-
-        <button id="prevBtn"
-          class="absolute z-30 top-1/2 left-4 -translate-y-1/2 bg-white/20 hover:bg-white/40 p-2 rounded-full transition-colors"
-          aria-label="Previous Slide">
-          <span class="material-symbols-outlined">arrow_back_ios_new</span>
-        </button>
-        <button id="nextBtn"
-          class="absolute z-30 top-1/2 right-4 -translate-y-1/2 bg-white/20 hover:bg-white/40 p-2 rounded-full transition-colors"
-          aria-label="Next Slide">
-          <span class="material-symbols-outlined">arrow_forward_ios</span>
-        </button>
-
-        <div id="slider-dots" class="absolute z-30 bottom-5 left-1/2 -translate-x-1/2 flex space-x-2">
-          <div class="dot w-3 h-3 bg-white/50 rounded-full cursor-pointer transition-colors"></div>
-          <div class="dot w-3 h-3 bg-white/50 rounded-full cursor-pointer transition-colors"></div>
-          <div class="dot w-3 h-3 bg-white/50 rounded-full cursor-pointer transition-colors"></div>
-        </div>
-      </section>
-
-      <!-- Track Your Issue Section -->
-      <section class="mb-12">
-        <div class="bg-white rounded-xl shadow-md p-6">
-          <h2 class="text-2xl font-bold text-gray-800 mb-4">Track Your Report</h2>
-          <div class="flex flex-col sm:flex-row gap-4">
-            <input id="tracking-id-input" type="text" placeholder="Enter your Tracking ID (e.g., CFX-123456)"
-              class="flex-grow w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#611BF8]">
-            <button id="track-btn"
-              class="w-full sm:w-auto bg-[#611BF8] text-white font-semibold px-6 py-2 rounded-lg hover:bg-opacity-90 transition-all">Track</button>
-          </div>
-        </div>
-      </section>
-
-      <!-- Announcements Section -->
-      <section class="mb-12">
-        <h2 class="text-2xl font-bold text-gray-800 mb-6">Announcements & Alerts</h2>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+      <div class="lg:col-span-2">
+        <h2 class="text-xl md:text-2xl font-bold text-slate-800 dark:text-slate-100 mb-6">Pending Problems</h2>
         <div class="space-y-4">
-          <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-r-lg shadow-md" role="alert">
-            <div class="flex">
-              <div class="py-1"><span class="material-symbols-outlined mr-4">warning</span></div>
-              <div>
-                <p class="font-bold">High Alert: Water Main Break</p>
-                <p class="text-sm">Major water main break reported at Park Street crossing. Expect traffic diversions
-                  and low water pressure in the area. Repair crews dispatched.</p>
-              </div>
+          <div
+            class="bg-white dark:bg-slate-800 rounded-xl shadow-md p-4 flex items-start space-x-4 hover:shadow-lg transition-shadow border border-transparent dark:border-slate-700">
+            <div
+              class="w-12 h-12 bg-red-100 dark:bg-red-900/30 text-red-500 dark:text-red-400 rounded-lg flex items-center justify-center flex-shrink-0">
+              <span class="material-symbols-outlined">light_mode</span>
+            </div>
+            <div>
+              <p class="font-bold text-slate-800 dark:text-slate-100">Broken Streetlight</p>
+              <p class="text-sm text-slate-500 dark:text-slate-400 mb-1">Opposite Mocambo, Park Street, Kolkata</p>
+              <p class="text-xs text-slate-400 dark:text-slate-500">ID: CFX-MOCK1</p>
             </div>
           </div>
-          <div class="bg-amber-100 border-l-4 border-amber-500 text-amber-700 p-4 rounded-r-lg shadow-md" role="alert">
-            <div class="flex">
-              <div class="py-1"><span class="material-symbols-outlined mr-4">info</span></div>
-              <div>
-                <p class="font-bold">Notice: Waste Collection Schedule Change</p>
-                <p class="text-sm">Due to a public holiday, waste collection for Sector V, Salt Lake will be postponed
-                  to Friday, Sept 12th. Please cooperate.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Pending Problems & Top Contributors -->
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
-        <!-- Pending Problems -->
-        <div class="lg:col-span-2">
-          <h2 class="text-2xl font-bold text-gray-800 mb-6">Pending Problems</h2>
-          <div class="space-y-4">
-            <div class="bg-white rounded-xl shadow-md p-4 flex items-start space-x-4 hover:shadow-lg transition-shadow">
-              <div class="w-12 h-12 bg-red-100 text-red-500 rounded-lg flex items-center justify-center flex-shrink-0">
-                <span class="material-symbols-outlined">light_mode</span>
-              </div>
-              <div>
-                <p class="font-bold text-gray-800">Broken Streetlight</p>
-                <p class="text-sm text-gray-500 mb-1">Opposite Mocambo, Park Street, Kolkata</p>
-                <p class="text-xs text-gray-400">ID: CFX-MOCK1</p>
-              </div>
-            </div>
-            <div class="bg-white rounded-xl shadow-md p-4 flex items-start space-x-4 hover:shadow-lg transition-shadow">
-              <div
-                class="w-12 h-12 bg-yellow-100 text-yellow-500 rounded-lg flex items-center justify-center flex-shrink-0">
-                <span class="material-symbols-outlined">construction</span>
-              </div>
-              <div>
-                <p class="font-bold text-gray-800">Large Pothole</p>
-                <p class="text-sm text-gray-500 mb-1">Near College More, Salt Lake Sector V, Kolkata</p>
-                <p class="text-xs text-gray-400">ID: CFX-MOCK2</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- Top Contributors -->
-        <div>
-          <h2 class="text-2xl font-bold text-gray-800 mb-6">Top Contributors</h2>
-          <div class="space-y-4">
+          <div
+            class="bg-white dark:bg-slate-800 rounded-xl shadow-md p-4 flex items-start space-x-4 hover:shadow-lg transition-shadow border border-transparent dark:border-slate-700">
             <div
-              class="bg-white rounded-xl shadow-md p-4 flex items-center space-x-4 hover:shadow-lg transition-shadow">
-              <div class="w-10 h-10 bg-amber-100 text-amber-500 rounded-full flex items-center justify-center"><span
-                  class="material-symbols-outlined">workspace_premium</span></div>
-              <div>
-                <p class="font-bold text-gray-800">Md Faijan</p>
-                <p class="text-sm text-gray-500">240 Points</p>
-              </div>
+              class="w-12 h-12 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-500 dark:text-yellow-400 rounded-lg flex items-center justify-center flex-shrink-0">
+              <span class="material-symbols-outlined">construction</span>
             </div>
-            <div
-              class="bg-white rounded-xl shadow-md p-4 flex items-center space-x-4 hover:shadow-lg transition-shadow">
-              <div class="w-10 h-10 bg-slate-100 text-slate-500 rounded-full flex items-center justify-center"><span
-                  class="material-symbols-outlined">military_tech</span></div>
-              <div>
-                <p class="font-bold text-gray-800">Md Mustafa</p>
-                <p class="text-sm text-gray-500">215 Points</p>
-              </div>
-            </div>
-            <div
-              class="bg-white rounded-xl shadow-md p-4 flex items-center space-x-4 hover:shadow-lg transition-shadow">
-              <div class="w-10 h-10 bg-sky-100 text-sky-500 rounded-full flex items-center justify-center"><span
-                  class="material-symbols-outlined">verified</span></div>
-              <div>
-                <p class="font-bold text-gray-800">Danish Ali</p>
-                <p class="text-sm text-gray-500">190 Points</p>
-              </div>
+            <div>
+              <p class="font-bold text-slate-800 dark:text-slate-100">Large Pothole</p>
+              <p class="text-sm text-slate-500 dark:text-slate-400 mb-1">Near College More, Salt Lake Sector V,
+                Kolkata</p>
+              <p class="text-xs text-slate-400 dark:text-slate-500">ID: CFX-MOCK2</p>
             </div>
           </div>
         </div>
       </div>
-
-      <!-- Recently Solved -->
-      <section class="mb-12">
-        <h2 class="text-2xl font-bold text-gray-800 mb-6">Recently Solved</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div class="bg-white rounded-xl shadow-md p-4 flex items-start space-x-4 hover:shadow-lg transition-shadow">
+      <div>
+        <h2 class="text-xl md:text-2xl font-bold text-slate-800 dark:text-slate-100 mb-6">Top Contributors</h2>
+        <div class="space-y-4">
+          <div
+            class="bg-white dark:bg-slate-800 rounded-xl shadow-md p-4 flex items-center space-x-4 hover:shadow-lg transition-shadow border border-transparent dark:border-slate-700">
             <div
-              class="w-12 h-12 bg-green-100 text-green-500 rounded-lg flex items-center justify-center flex-shrink-0">
-              <span class="material-symbols-outlined">delete</span>
+              class="w-10 h-10 bg-amber-100 dark:bg-amber-900/30 text-amber-500 dark:text-amber-400 rounded-full flex items-center justify-center">
+              <span class="material-symbols-outlined">workspace_premium</span>
             </div>
             <div>
-              <p class="font-bold text-gray-800">Overflowing Trash Bin</p>
-              <p class="text-sm text-gray-500 mb-1">New Town Bus Stand, Action Area I, Kolkata</p>
-              <p class="text-xs text-gray-400">ID: CFX-MOCK3</p>
+              <p class="font-bold text-slate-800 dark:text-slate-100">Md Faijan</p>
+              <p class="text-sm text-slate-500 dark:text-slate-400">240 Points</p>
             </div>
           </div>
-          <div class="bg-white rounded-xl shadow-md p-4 flex items-start space-x-4 hover:shadow-lg transition-shadow">
+          <div
+            class="bg-white dark:bg-slate-800 rounded-xl shadow-md p-4 flex items-center space-x-4 hover:shadow-lg transition-shadow border border-transparent dark:border-slate-700">
             <div
-              class="w-12 h-12 bg-green-100 text-green-500 rounded-lg flex items-center justify-center flex-shrink-0">
-              <span class="material-symbols-outlined">format_paint</span>
+              class="w-10 h-10 bg-slate-200 dark:bg-slate-600 text-slate-500 dark:text-slate-400 rounded-full flex items-center justify-center">
+              <span class="material-symbols-outlined">military_tech</span>
             </div>
             <div>
-              <p class="font-bold text-gray-800">Graffiti on Wall</p>
-              <p class="text-sm text-gray-500 mb-1">Near Basanti Devi College, Gariahat, Kolkata</p>
-              <p class="text-xs text-gray-400">ID: CFX-MOCK4</p>
+              <p class="font-bold text-slate-800 dark:text-slate-100">Md Mustafa</p>
+              <p class="text-sm text-slate-500 dark:text-slate-400">215 Points</p>
+            </div>
+          </div>
+          <div
+            class="bg-white dark:bg-slate-800 rounded-xl shadow-md p-4 flex items-center space-x-4 hover:shadow-lg transition-shadow border border-transparent dark:border-slate-700">
+            <div
+              class="w-10 h-10 bg-sky-100 dark:bg-sky-900/30 text-sky-500 dark:text-sky-400 rounded-full flex items-center justify-center">
+              <span class="material-symbols-outlined">verified</span>
+            </div>
+            <div>
+              <p class="font-bold text-slate-800 dark:text-slate-100">Danish Ali</p>
+              <p class="text-sm text-slate-500 dark:text-slate-400">190 Points</p>
             </div>
           </div>
         </div>
-      </section>
-
-      <!-- Community Polls Section -->
-      <section class="mb-12">
-        <h2 class="text-2xl font-bold text-gray-800 mb-6">Community Poll</h2>
-        <div class="bg-white rounded-xl shadow-md">
-          <div class="p-6">
-            <p class="font-semibold text-gray-900 mb-1">What should be the priority for the next budget allocation in
-              the Gariahat area?</p>
-            <p class="text-sm text-gray-600 mb-4">Your feedback helps shape our community. Please cast your vote.</p>
-            <div id="poll-options" class="space-y-3">
-              <button
-                class="poll-option w-full text-left p-3 border rounded-lg hover:bg-gray-50 transition-colors">Improving
-                road quality and fixing potholes.</button>
-              <button
-                class="poll-option w-full text-left p-3 border rounded-lg hover:bg-gray-50 transition-colors">Installing
-                more streetlights for better safety.</button>
-              <button
-                class="poll-option w-full text-left p-3 border rounded-lg hover:bg-gray-50 transition-colors">Upgrading
-                the public park with new equipment.</button>
-            </div>
-            <div id="poll-results" class="hidden space-y-3 mt-4">
-              <!-- Results will be shown here -->
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- How It Works Section -->
-      <section class="mb-12">
-        <h2 class="text-2xl font-bold text-gray-800 mb-6">How It Works</h2>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-          <div class="bg-white rounded-xl shadow-md p-6">
-            <div
-              class="w-16 h-16 bg-[#F0EAFE] text-[#611BF8] rounded-full flex items-center justify-center mx-auto mb-4">
-              <span class="material-symbols-outlined text-3xl">photo_camera</span>
-            </div>
-            <h3 class="text-lg font-semibold mb-2">1. Report an Issue</h3>
-            <p class="text-gray-600">Capture a photo, add details, and submit your report in seconds.</p>
-          </div>
-          <div class="bg-white rounded-xl shadow-md p-6">
-            <div
-              class="w-16 h-16 bg-[#F0EAFE] text-[#611BF8] rounded-full flex items-center justify-center mx-auto mb-4">
-              <span class="material-symbols-outlined text-3xl">assignment_ind</span>
-            </div>
-            <h3 class="text-lg font-semibold mb-2">2. Authority Takes Action</h3>
-            <p class="text-gray-600">Your report is assigned to the correct department for resolution.</p>
-          </div>
-          <div class="bg-white rounded-xl shadow-md p-6">
-            <div
-              class="w-16 h-16 bg-[#F0EAFE] text-[#611BF8] rounded-full flex items-center justify-center mx-auto mb-4">
-              <span class="material-symbols-outlined text-3xl">check_circle</span>
-            </div>
-            <h3 class="text-lg font-semibold mb-2">3. Track Resolution</h3>
-            <p class="text-gray-600">Receive real-time updates as your issue is resolved.</p>
-          </div>
-        </div>
-      </section>
-    </main>
-  </div>
-
-
-  <!-- Tracking Modal -->
-  <div id="tracking-modal" class="hidden fixed inset-0 z-[100] items-center justify-center modal-backdrop p-4">
-    <div id="tracking-modal-content" class="bg-white rounded-lg shadow-2xl w-full max-w-lg p-6 animate-fade-in-up">
+      </div>
     </div>
-  </div>
-  <footer class="bg-gray-800 text-white py-12">
+
+    <section class="mb-12">
+      <h2 class="text-xl md:text-2xl font-bold text-slate-800 dark:text-slate-100 mb-6">Recently Solved</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div
+          class="bg-white dark:bg-slate-800 rounded-xl shadow-md p-4 flex items-start space-x-4 hover:shadow-lg transition-shadow border border-transparent dark:border-slate-700">
+          <div
+            class="w-12 h-12 bg-green-100 dark:bg-green-900/30 text-green-500 dark:text-green-400 rounded-lg flex items-center justify-center flex-shrink-0">
+            <span class="material-symbols-outlined">delete</span>
+          </div>
+          <div>
+            <p class="font-bold text-slate-800 dark:text-slate-100">Overflowing Trash Bin</p>
+            <p class="text-sm text-slate-500 dark:text-slate-400 mb-1">New Town Bus Stand, Action Area I, Kolkata</p>
+            <p class="text-xs text-slate-400 dark:text-slate-500">ID: CFX-MOCK3</p>
+          </div>
+        </div>
+        <div
+          class="bg-white dark:bg-slate-800 rounded-xl shadow-md p-4 flex items-start space-x-4 hover:shadow-lg transition-shadow border border-transparent dark:border-slate-700">
+          <div
+            class="w-12 h-12 bg-green-100 dark:bg-green-900/30 text-green-500 dark:text-green-400 rounded-lg flex items-center justify-center flex-shrink-0">
+            <span class="material-symbols-outlined">format_paint</span>
+          </div>
+          <div>
+            <p class="font-bold text-slate-800 dark:text-slate-100">Graffiti on Wall</p>
+            <p class="text-sm text-slate-500 dark:text-slate-400 mb-1">Near Basanti Devi College, Gariahat, Kolkata
+            </p>
+            <p class="text-xs text-slate-400 dark:text-slate-500">ID: CFX-MOCK4</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="mb-12">
+      <h2 class="text-xl md:text-2xl font-bold text-slate-800 dark:text-slate-100 mb-6">Community Poll</h2>
+      <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md border border-transparent dark:border-slate-700">
+        <div class="p-6">
+          <p class="font-semibold text-slate-900 dark:text-slate-100 mb-1">What should be the priority for the next
+            budget allocation in the Gariahat area?</p>
+          <p class="text-sm text-slate-600 dark:text-slate-400 mb-4">Your feedback helps shape our community. Please
+            cast your vote.</p>
+          <div id="poll-options" class="space-y-3">
+            <button
+              class="poll-option w-full text-left p-3 border border-slate-300 dark:border-slate-600 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">Improving
+              road quality and fixing potholes.</button>
+            <button
+              class="poll-option w-full text-left p-3 border border-slate-300 dark:border-slate-600 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">Installing
+              more streetlights for better safety.</button>
+            <button
+              class="poll-option w-full text-left p-3 border border-slate-300 dark:border-slate-600 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">Upgrading
+              the public park with new equipment.</button>
+          </div>
+          <div id="poll-results" class="hidden space-y-3 mt-4"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="mb-12">
+      <h2 class="text-xl md:text-2xl font-bold text-slate-800 dark:text-slate-100 mb-6">How It Works</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+        <div
+          class="bg-white dark:bg-slate-800 rounded-xl shadow-md p-6 border border-transparent dark:border-slate-700">
+          <div
+            class="w-14 h-14 md:w-16 md:h-16 bg-[#F0EAFE] dark:bg-indigo-900/40 text-[#611BF8] dark:text-indigo-400 rounded-full flex items-center justify-center mx-auto mb-4">
+            <span class="material-symbols-outlined text-3xl">photo_camera</span>
+          </div>
+          <h3 class="text-lg font-semibold mb-2 text-slate-800 dark:text-slate-100">1. Report an Issue</h3>
+          <p class="text-slate-600 dark:text-slate-400">Capture a photo, add details, and submit your report in
+            seconds.</p>
+        </div>
+        <div
+          class="bg-white dark:bg-slate-800 rounded-xl shadow-md p-6 border border-transparent dark:border-slate-700">
+          <div
+            class="w-14 h-14 md:w-16 md:h-16 bg-[#F0EAFE] dark:bg-indigo-900/40 text-[#611BF8] dark:text-indigo-400 rounded-full flex items-center justify-center mx-auto mb-4">
+            <span class="material-symbols-outlined text-3xl">assignment_ind</span>
+          </div>
+          <h3 class="text-lg font-semibold mb-2 text-slate-800 dark:text-slate-100">2. Authority Takes Action</h3>
+          <p class="text-slate-600 dark:text-slate-400">Your report is assigned to the correct department for
+            resolution.</p>
+        </div>
+        <div
+          class="bg-white dark:bg-slate-800 rounded-xl shadow-md p-6 border border-transparent dark:border-slate-700">
+          <div
+            class="w-14 h-14 md:w-16 md:h-16 bg-[#F0EAFE] dark:bg-indigo-900/40 text-[#611BF8] dark:text-indigo-400 rounded-full flex items-center justify-center mx-auto mb-4">
+            <span class="material-symbols-outlined text-3xl">check_circle</span>
+          </div>
+          <h3 class="text-lg font-semibold mb-2 text-slate-800 dark:text-slate-100">3. Track Resolution</h3>
+          <p class="text-slate-600 dark:text-slate-400">Receive real-time updates as your issue is resolved.</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="bg-slate-800 dark:bg-black/50 text-white py-12">
     <div class="container mx-auto px-4">
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
         <div>
@@ -381,80 +418,49 @@
             <span class="material-symbols-outlined text-2xl">location_city</span>
             <h3 class="text-xl font-bold">CivicFix</h3>
           </div>
-          <p class="text-gray-400 mb-4">
-            Empowering citizens to improve their communities through collaborative issue reporting and resolution
-            tracking.
-          </p>
+          <p class="text-gray-400 mb-4">Empowering citizens to improve their communities through collaborative issue
+            reporting and resolution tracking.</p>
           <div class="flex space-x-4">
-            <a href="#" class="text-gray-400 hover:text-white transition-colors">
-              <i class="fa-brands fa-facebook text-xl"></i>
-            </a>
-            <a href="#" class="text-gray-400 hover:text-white transition-colors">
-              <i class="fa-brands fa-twitter text-xl"></i>
-            </a>
-            <a href="#" class="text-gray-400 hover:text-white transition-colors">
-              <i class="fa-brands fa-instagram text-xl"></i>
-            </a>
-            <a href="#" class="text-gray-400 hover:text-white transition-colors">
-              <i class="fa-brands fa-linkedin text-xl"></i>
-            </a>
+            <a href="#" class="text-gray-400 hover:text-white transition-colors"><i
+                class="fa-brands fa-facebook text-xl"></i></a>
+            <a href="#" class="text-gray-400 hover:text-white transition-colors"><i
+                class="fa-brands fa-twitter text-xl"></i></a>
+            <a href="#" class="text-gray-400 hover:text-white transition-colors"><i
+                class="fa-brands fa-instagram text-xl"></i></a>
+            <a href="#" class="text-gray-400 hover:text-white transition-colors"><i
+                class="fa-brands fa-linkedin text-xl"></i></a>
           </div>
         </div>
         <div>
           <h3 class="text-lg font-semibold mb-4">Quick Links</h3>
           <ul class="space-y-2">
-            <li>
-              <a href="index.html" class="text-gray-400 hover:text-white transition-colors">Home</a>
+            <li><a href="index.html" class="text-gray-400 hover:text-white transition-colors">Home</a></li>
+            <li><a href="report.html" class="text-gray-400 hover:text-white transition-colors">Report an Issue</a>
             </li>
-            <li>
-              <a href="report.html" class="text-gray-400 hover:text-white transition-colors">Report an Issue</a>
-            </li>
-            <li>
-              <a href="index.html" class="text-gray-400 hover:text-white transition-colors">View Map</a>
-            </li>
-            <li>
-              <a href="index.html" class="text-gray-400 hover:text-white transition-colors">Dashboard</a>
-            </li>
-            <li>
-              <a href="contact.html" class="text-gray-400 hover:text-white transition-colors">Community</a>
-            </li>
+            <li><a href="index.html" class="text-gray-400 hover:text-white transition-colors">View Map</a></li>
+            <li><a href="index.html" class="text-gray-400 hover:text-white transition-colors">Dashboard</a></li>
+            <li><a href="contact.html" class="text-gray-400 hover:text-white transition-colors">Community</a></li>
           </ul>
         </div>
         <div>
           <h3 class="text-lg font-semibold mb-4">Support</h3>
           <ul class="space-y-2">
-            <li>
-              <a href="#" class="text-gray-400 hover:text-white transition-colors">Help Center</a>
-            </li>
-            <li>
-              <a href="#" class="text-gray-400 hover:text-white transition-colors">FAQs</a>
-            </li>
-            <li>
-              <a href="contact.html" class="text-gray-400 hover:text-white transition-colors">Contact Us</a>
-            </li>
-            <li>
-              <a href="#" class="text-gray-400 hover:text-white transition-colors">Privacy Policy</a>
-            </li>
-            <li>
-              <a href="#" class="text-gray-400 hover:text-white transition-colors">Terms of Service</a>
-            </li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Help Center</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">FAQs</a></li>
+            <li><a href="contact.html" class="text-gray-400 hover:text-white transition-colors">Contact Us</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Privacy Policy</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Terms of Service</a></li>
           </ul>
         </div>
         <div>
           <h3 class="text-lg font-semibold mb-4">Stay Updated</h3>
-          <p class="text-gray-400 mb-4">
-            Subscribe to our newsletter for updates on civic improvements.
-          </p>
+          <p class="text-gray-400 mb-4">Subscribe to our newsletter for updates on civic improvements.</p>
           <form>
-            <div class="flex">
-              <input type="email" placeholder="Your email address"
-                class="px-4 py-2 rounded-l-lg w-full focus:outline-none text-gray-800 bg-white" />
-              <button class="bg-[#611BF8] hover:bg-[#611BF8] transition-colors px-4 py-2 rounded-r-lg">
-                <span class="material-symbols-outlined">send</span>
-              </button>
-            </div>
+            <div class="flex"><input type="email" placeholder="Your email address"
+                class="px-4 py-2 rounded-l-lg w-full focus:outline-none text-gray-800 bg-white" /><button
+                class="bg-[#611BF8] hover:bg-[#611BF8] transition-colors px-4 py-2 rounded-r-lg"><span
+                  class="material-symbols-outlined">send</span></button></div>
           </form>
-
         </div>
       </div>
       <div class="pt-8 border-t border-gray-700 text-center text-gray-400">
@@ -462,9 +468,25 @@
       </div>
     </div>
   </footer>
+  </div>
+
+  <div id="tracking-modal" class="hidden fixed inset-0 z-[100] items-center justify-center modal-backdrop p-4">
+    <div id="tracking-modal-content"
+      class="bg-white dark:bg-slate-800 rounded-lg shadow-2xl w-full max-w-lg p-6 animate-fade-in-up"></div>
+  </div>
 
   <script>
+      (function () {
+        const savedTheme = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+      })();
     document.addEventListener('DOMContentLoaded', () => {
+      // User Login Check
       const user = JSON.parse(localStorage.getItem('civicFixUser'));
       if (!user) {
         window.location.href = 'login.html';
@@ -473,45 +495,150 @@
       document.getElementById('user-name').textContent = user.name;
       document.getElementById('user-initial').textContent = user.name.charAt(0).toUpperCase();
 
-      // Mobile menu toggle
+      // Collapsible Top Bar Logic
+      const topBarToggle = document.getElementById('top-bar-toggle');
+      const topBarContent = document.getElementById('top-bar-content');
+      if (topBarToggle) {
+        topBarToggle.addEventListener('click', () => {
+          topBarContent.classList.toggle('hidden');
+          topBarToggle.querySelector('.material-symbols-outlined').classList.toggle('rotate-180');
+        });
+      }
+
+      // Dark Mode Toggle Logic
+      const checkbox = document.getElementById('theme-toggle-checkbox');
+      const button = document.getElementById('theme-toggle-button');
+      const icon = document.getElementById('theme-toggle-icon');
+      const htmlEl = document.documentElement;
+
+      button.addEventListener('click', () => {
+        checkbox.checked = !checkbox.checked;
+        const isDark = checkbox.checked;
+        if (isDark) {
+          htmlEl.classList.add('dark');
+          localStorage.setItem('theme', 'dark');
+          icon.textContent = 'dark_mode';
+        } else {
+          htmlEl.classList.remove('dark');
+          localStorage.setItem('theme', 'light');
+          icon.textContent = 'light_mode';
+        }
+      });
+
+      // Mobile Menu Toggle
       const mobileMenuBtn = document.getElementById('mobile-menu-btn');
       const mobileMenu = document.getElementById('mobile-menu');
-      const currentDate = document.getElementById('current-date');
       mobileMenuBtn.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
 
-      // Date
-      const now = new Date();
-      const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
-      currentDate.textContent = now.toLocaleDateString(undefined, options);
+      // Date Display
+      const currentDateEl = document.getElementById('current-date');
+      if (currentDateEl) {
+        const now = new Date();
+        const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+        currentDateEl.textContent = now.toLocaleDateString('en-IN', options);
+      }
 
-      // Mock data for tracking
-      const mockReports = [
-        { id: 'CFX-MOCK1', issueType: 'Broken Streetlight', location: 'Opposite Mocambo, Park Street, Kolkata', status: 'Pending' },
-        { id: 'CFX-MOCK2', issueType: 'Large Pothole', location: 'Near College More, Salt Lake Sector V, Kolkata', status: 'InProgress' },
-        { id: 'CFX-MOCK3', issueType: 'Overflowing Trash Bin', location: 'New Town Bus Stand, Action Area I, Kolkata', status: 'Resolved' },
-        { id: 'CFX-MOCK4', issueType: 'Graffiti on Wall', location: 'Near Basanti Devi College, Gariahat, Kolkata', status: 'Resolved' }
-      ];
+      // All other JavaScript (Slider, Modal, Poll, etc.)
+      const slides = document.querySelectorAll(".slide");
+      const dots = document.querySelectorAll(".dot");
+      const prevBtn = document.getElementById("prevBtn");
+      const nextBtn = document.getElementById("nextBtn");
+      let currentIndex = 0;
+      let slideInterval;
+
+      function showSlide(index) {
+        if (!slides.length || !dots.length) return;
+        slides.forEach((slide, i) => {
+          slide.classList.remove("opacity-100", "z-10");
+          slide.classList.add("opacity-0");
+          dots[i].classList.remove("bg-white");
+          dots[i].classList.add("bg-white/50");
+        });
+        slides[index].classList.remove("opacity-0");
+        slides[index].classList.add("opacity-100", "z-10");
+        dots[index].classList.remove("bg-white/50");
+        dots[index].classList.add("bg-white");
+        currentIndex = index;
+      }
+
+      function nextSlide() {
+        if (!slides.length) return;
+        let newIndex = (currentIndex + 1) % slides.length;
+        showSlide(newIndex);
+      }
+
+      if (nextBtn && prevBtn) {
+        nextBtn.addEventListener("click", () => { nextSlide(); clearInterval(slideInterval); slideInterval = setInterval(nextSlide, 5000); });
+        prevBtn.addEventListener("click", () => {
+          let newIndex = (currentIndex - 1 + slides.length) % slides.length;
+          showSlide(newIndex);
+          clearInterval(slideInterval);
+          slideInterval = setInterval(nextSlide, 5000);
+        });
+      }
+
+      dots.forEach((dot, i) => {
+        dot.addEventListener("click", () => { showSlide(i); clearInterval(slideInterval); slideInterval = setInterval(nextSlide, 5000); });
+      });
+
+      if (slides.length > 0) {
+        showSlide(0);
+        slideInterval = setInterval(nextSlide, 5000);
+      }
+
+      const trackBtn = document.getElementById('track-btn');
+      //... continue with the rest of the original  // Mock data for tracking
+      const mockReports = [{
+        id: 'CFX-MOCK1',
+        issueType: 'Broken Streetlight',
+        location: 'Opposite Mocambo, Park Street, Kolkata',
+        status: 'Pending'
+      }, {
+        id: 'CFX-MOCK2',
+        issueType: 'Large Pothole',
+        location: 'Near College More, Salt Lake Sector V, Kolkata',
+        status: 'InProgress'
+      }, {
+        id: 'CFX-MOCK3',
+        issueType: 'Overflowing Trash Bin',
+        location: 'New Town Bus Stand, Action Area I, Kolkata',
+        status: 'Resolved'
+      }, {
+        id: 'CFX-MOCK4',
+        issueType: 'Graffiti on Wall',
+        location: 'Near Basanti Devi College, Gariahat, Kolkata',
+        status: 'Resolved'
+      }];
       const allTrackableReports = [...mockReports, ...(JSON.parse(localStorage.getItem('civicFixReports')) || [])];
 
       // Tracking Modal Logic
-      const trackBtn = document.getElementById('track-btn');
       const trackingInput = document.getElementById('tracking-id-input');
       const trackingModal = document.getElementById('tracking-modal');
       const trackingModalContent = document.getElementById('tracking-modal-content');
 
       const openTrackingModal = (report) => {
-        const statusInfo = { Pending: { color: 'red' }, InProgress: { color: 'yellow' }, Resolved: { color: 'green' } };
+        const statusInfo = {
+          Pending: {
+            color: 'red'
+          },
+          InProgress: {
+            color: 'yellow'
+          },
+          Resolved: {
+            color: 'green'
+          }
+        };
         trackingModalContent.innerHTML = `
-                    <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-xl font-bold text-gray-800">Report Status</h2>
-                        <button id="close-track-modal" class="text-gray-500 hover:text-gray-800 text-3xl leading-none">&times;</button>
-                    </div>
-                    <div class="space-y-3">
-                        <p><strong class="font-medium text-gray-800">Tracking ID:</strong> ${report.id}</p>
-                        <p><strong class="font-medium text-gray-800">Status:</strong> <span class="text-white rounded-full px-3 py-1 text-sm font-medium bg-${statusInfo[report.status].color}-500">${report.status}</span></p>
-                        <p><strong class="font-medium text-gray-800">Issue:</strong> ${report.issueType}</p>
-                        <p><strong class="font-medium text-gray-800">Location:</strong> ${report.location}</p>
-                    </div>`;
+                        <div class="flex justify-between items-center mb-4">
+                            <h2 class="text-xl font-bold text-gray-800">Report Status</h2>
+                            <button id="close-track-modal" class="text-gray-500 hover:text-gray-800 text-3xl leading-none">&times;</button>
+                        </div>
+                        <div class="space-y-3">
+                            <p><strong class="font-medium text-gray-800">Tracking ID:</strong> ${report.id}</p>
+                            <p><strong class="font-medium text-gray-800">Status:</strong> <span class="text-white rounded-full px-3 py-1 text-sm font-medium bg-${statusInfo[report.status].color}-500">${report.status}</span></p>
+                            <p><strong class="font-medium text-gray-800">Issue:</strong> ${report.issueType}</p>
+                            <p><strong class="font-medium text-gray-800">Location:</strong> ${report.location}</p>
+                        </div>`;
         trackingModal.classList.remove('hidden');
         trackingModal.classList.add('flex');
         document.getElementById('close-track-modal').onclick = closeTrackingModal;
@@ -535,31 +662,25 @@
           pollOptionsContainer.classList.add('hidden');
           // Mock results for demonstration
           pollResultsContainer.innerHTML = `
-                        <p class="font-semibold text-gray-800">Thank you for voting! Current results:</p>
-                        <div>
-                            <div class="flex justify-between mb-1"><span class="text-sm font-medium text-gray-700">Road Quality</span><span class="text-sm font-medium text-gray-700">58%</span></div>
-                            <div class="w-full bg-gray-200 rounded-full h-2.5"><div class="bg-blue-600 h-2.5 rounded-full" style="width: 58%"></div></div>
-                        </div>
-                        <div>
-                            <div class="flex justify-between mb-1"><span class="text-sm font-medium text-gray-700">More Streetlights</span><span class="text-sm font-medium text-gray-700">32%</span></div>
-                            <div class="w-full bg-gray-200 rounded-full h-2.5"><div class="bg-blue-600 h-2.5 rounded-full" style="width: 32%"></div></div>
-                        </div>
-                        <div>
-                            <div class="flex justify-between mb-1"><span class="text-sm font-medium text-gray-700">Park Upgrade</span><span class="text-sm font-medium text-gray-700">10%</span></div>
-                            <div class="w-full bg-gray-200 rounded-full h-2.5"><div class="bg-blue-600 h-2.5 rounded-full" style="width: 10%"></div></div>
-                        </div>
-                    `;
+                            <p class="font-semibold text-gray-800">Thank you for voting! Current results:</p>
+                            <div>
+                                <div class="flex justify-between mb-1"><span class="text-sm font-medium text-gray-700">Road Quality</span><span class="text-sm font-medium text-gray-700">58%</span></div>
+                                <div class="w-full bg-gray-200 rounded-full h-2.5"><div class="bg-blue-600 h-2.5 rounded-full" style="width: 58%"></div></div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between mb-1"><span class="text-sm font-medium text-gray-700">More Streetlights</span><span class="text-sm font-medium text-gray-700">32%</span></div>
+                                <div class="w-full bg-gray-200 rounded-full h-2.5"><div class="bg-blue-600 h-2.5 rounded-full" style="width: 32%"></div></div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between mb-1"><span class="text-sm font-medium text-gray-700">Park Upgrade</span><span class="text-sm font-medium text-gray-700">10%</span></div>
+                                <div class="w-full bg-gray-200 rounded-full h-2.5"><div class="bg-blue-600 h-2.5 rounded-full" style="width: 10%"></div></div>
+                            </div>
+                        `;
           pollResultsContainer.classList.remove('hidden');
         });
       });
 
       // Image Slider Logic
-      const slides = document.querySelectorAll(".slide");
-      const dots = document.querySelectorAll(".dot");
-      const prevBtn = document.getElementById("prevBtn");
-      const nextBtn = document.getElementById("nextBtn");
-      let currentIndex = 0;
-      let slideInterval;
 
       function showSlide(index) {
         slides.forEach((slide, i) => {
@@ -622,6 +743,8 @@
 
     });
   </script>
+  <script type="text/javascript"
+    src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 
 </html>
